@@ -375,6 +375,8 @@
       "@deepseek-ai/dsh-agent-team/types": ["./packages/team/agent-team/src/types.ts"],
       "@deepseek-ai/dsh-agent-team-gui": ["./packages/experimental/dsh-agent-team-gui/src"],
       "@deepseek-ai/dsh-agent-team-gui/client": ["./packages/experimental/dsh-agent-team-gui/src/client/index.ts"],
+      "@deepseek-ai/dsh-remote-web-ui": ["./packages/experimental/dsh-remote-web-ui/src"],
+      "@deepseek-ai/dsh-remote-web-ui/client": ["./packages/experimental/dsh-remote-web-ui/src/client/index.ts"],
       "@deepseek-ai/dsh-experimental-auto-review": ["./packages/experimental/auto-review/src"],
       "@deepseek-ai/dsh-experimental-claude-code-mods": ["./packages/experimental/claude-code-mods/src"],
       "@deepseek-ai/dsh-tool-agent-team": ["./packages/team/tool-agent-team/src"],

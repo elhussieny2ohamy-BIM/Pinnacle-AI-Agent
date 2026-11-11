@@ -1,0 +1,8 @@
+# Remote Web UI: dual-face remote-control plugin. The patch layer inserts the
+# single plugin row that mounts both halves: the host side (pairing tokens,
+# device sessions, /api/pair routes, the api/gate listener) and the browser
+# side (served from this package's lib/client.js via the modules row).
+
+- insert:
+    - id: remote-web-ui
+      name: '@deepseek-ai/dsh-remote-web-ui'

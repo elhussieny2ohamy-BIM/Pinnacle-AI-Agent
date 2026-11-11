@@ -19,6 +19,9 @@
     "**/*.config.ts",
     "packages/client/tsdown.client.ts",
     "packages/experimental/dsh-agent-team-gui/src/**",
-    "packages/experimental/dsh-agent-team-gui/tests/**"
+    "packages/experimental/dsh-agent-team-gui/tests/**",
+    "packages/experimental/dsh-remote-web-ui/src/**",
+    "packages/experimental/dsh-remote-web-ui/tests/**",
+    "packages/experimental/dsh-remote-web-ui/vitest.setup.ts"
   ]
 }

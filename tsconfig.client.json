@@ -129,6 +129,7 @@
     { "path": "./packages/client/ui-subagent" },
     { "path": "./packages/client/ui-agent-team" },
     { "path": "./packages/experimental/dsh-agent-team-gui/tsconfig.client.json" },
+    { "path": "./packages/experimental/dsh-remote-web-ui/tsconfig.json" },
     { "path": "./packages/experimental/client-ui-stats" },
     { "path": "./packages/client/ui-dockkit" },
     { "path": "./packages/client/ui-sidebar-right" },

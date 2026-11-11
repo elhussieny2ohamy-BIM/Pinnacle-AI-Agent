@@ -78,6 +78,7 @@
     "@deepseek-ai/dsh-client-ui-agent-preset": "workspace:*",
     "@deepseek-ai/dsh-client-ui-agent-team": "workspace:*",
     "@deepseek-ai/dsh-agent-team-gui": "workspace:*",
+    "@deepseek-ai/dsh-remote-web-ui": "workspace:*",
     "@deepseek-ai/dsh-client-ui-approval": "workspace:*",
     "@deepseek-ai/dsh-client-ui-attachment": "workspace:*",
     "@deepseek-ai/dsh-client-ui-brand-official": "workspace:*",
