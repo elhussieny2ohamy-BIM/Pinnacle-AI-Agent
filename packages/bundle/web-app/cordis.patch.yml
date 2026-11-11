@@ -53,6 +53,16 @@
         enabled: true
         appVersion: !!js process.env.DSH_CLIENT_VERSION
 
+    # Agent Team GUI host row: Cordis service for durable squad orchestration,
+    # DAG workflows, run history, and provider-reported token usage.
+    - insert:
+        - id: agent-team-gui
+          name: '@deepseek-ai/dsh-agent-team-gui'
+          config:
+            defaultProvider: spawn
+            defaultExecutionMode: serial
+            defaultContextMode: spawn
+
     # Host-owned authorization sampled at Agent creation. The Plugins page
     # edits this settings namespace independently of the selected preset.
     - id: subagent-model-selection-settings
@@ -392,6 +402,10 @@
 
     - id: ui-agent-team
       name: '@deepseek-ai/dsh-client-ui-agent-team'
+
+    # Agent Team GUI: persistent multi-model squads with Run Center and Token insights.
+    - id: agent-team-gui
+      name: '@deepseek-ai/dsh-agent-team-gui'
 
     - id: ui-subagent
       name: '@deepseek-ai/dsh-client-ui-subagent'

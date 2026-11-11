@@ -17,6 +17,8 @@
     "**/*.js",
     "**/*.mjs",
     "**/*.config.ts",
-    "packages/client/tsdown.client.ts"
+    "packages/client/tsdown.client.ts",
+    "packages/experimental/dsh-agent-team-gui/src/**",
+    "packages/experimental/dsh-agent-team-gui/tests/**"
   ]
 }

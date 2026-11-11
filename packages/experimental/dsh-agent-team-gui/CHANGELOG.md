@@ -1,0 +1,167 @@
+# Changelog
+
+## 1.3.0 — 2026-09-19
+
+- Expose **Team usage** in Settings: **Lead decides when to delegate** or **Host
+  dispatches first**. New editor drafts and built-in templates default to on-demand;
+  existing saved/imported choices and legacy guaranteed defaults remain intact.
+- On-demand guidance lets the lead answer simple work or clarify missing information
+  before deciding to delegate, without starting a planning child for that decision.
+  Include bounded member roles/tool capabilities and keep adaptive planning available.
+- Clarify conversation selection, next-message forcing, Manual-only policy and the
+  foreground-only model-tool path. Preserve stored host-background preferences while
+  displaying the effective foreground behavior in on-demand mode.
+- Enforce Solo, Manual-only and selected-team boundaries at model-tool admission;
+  preserve one-shot Team overrides and bounded execution-chain continuation. Cancelled
+  pre-steps do not consume queued choices. One-shot Solo adds an explicit lead notice.
+- Fix fixed-order/quality toggle handlers reading an expired React event inside a
+  deferred state update. Give selects explicit accessible labels and show effective
+  fixed-order behavior instead of promising smart skipping/adaptive selection.
+
+## 1.2.0 — 2026-09-18
+
+- Address #70 with a tool-free system failure coordinator. `retry-once` diagnoses
+  before retrying: supported transient failures may retry once, structural revisions
+  return to the lead, and explicit billing exhaustion stops without another model call.
+- Add `continue_squad_run`: the lead can revise remaining work after a failed/partial
+  run settles, under one execution chain with a maximum of one continuation and the
+  original configured cumulative soft Token budget. Initial message admission remains
+  idempotent; continuation uses a durable successor receipt and plan revision checks.
+- Reuse independent successful results, invalidate affected descendants, preserve
+  original plans/progress and attribute diagnostic usage separately. Enforce session,
+  user-message, cancellation, quota, configuration and dependency boundaries.
+- Show failure diagnosis, chain lineage, cumulative reported usage and reused results
+  in Run Center. Keep one task node per existing member; arbitrary multi-node splitting
+  and quality-only replanning are not included. Manual Run Center retry remains explicit replay.
+- Bump the client/host handshake to v6 for the new continuation plan kind; refresh the
+  browser and restart DSH after upgrading. Existing definitions and old run rows remain readable.
+
+## 1.1.1 — 2026-09-17
+
+- Fix #66: filter member deny names through the global registry, preserve scoped allows,
+  recognize expanded delegation signatures, and guard marked in-process children at tool execution.
+  Explicit member denies also remain enforced for scope-local tools.
+- Fix #67: use the reviewer's configured output-token limit in quality-gate rounds, retaining
+  2,048 as the default only when no limit is configured.
+- Fix #68: validate dispatch inputs and definitions before the model-tool message claim;
+  fixed-order guidance explicitly tells the model to omit `memberOrder`. Admitted runs retain
+  their idempotency receipts even when execution fails.
+- Fix #69: budget dependency, review, and repair chains as complete serialized JSON, preserving
+  member attribution, sharing space across handoffs, and explicitly reporting truncation/omission.
+- Improve #70's failed-run guidance: accurately report settled status and suggest a narrower
+  follow-up instead of silently replacing failed workers. Automatic replanning remains deferred.
+- Address #71 with a plugin/DSH compatibility table and English SRT captions for the existing
+  screenshot walkthrough. No video was regenerated.
+
+Thanks to @Edvin-Kjall for the detailed workflow reports and @aixwork for the documentation feedback.
+
+## 1.1.0 — 2026-09-12
+
+- Support the DSH 0.1.5 API generation and restrict declared compatibility to
+  `>=0.1.5-rc.1 <0.1.6-0`; 1.0.1 remains the previous DSH 0.1.1 integration.
+- Fix plugin loading (`source.subscribe`) by observing `connection.generation`; restore
+  catalog refresh when a browser survives a Host restart.
+- Replace removed client-runtime and APIProxy dependencies with current renderer, Session,
+  and Connection contracts. Read composer state through the current `useInput` hook.
+- Route plugin calls through `/api/agentTeamGui` with DSH browser-cookie and Host/Origin
+  checks. RPC contract v5 rejects stale mixed frontend/backend assets.
+- Migrate Session event access to `snapshotEvents()` and seeded usage baselines to
+  `firstLiveSeq`. Keep existing team definitions, recipes, versions, and run history.
+- Update installation and browser verification for authenticated launch URLs, the current
+  official Remote envelopes, and changing process tokens on same-origin Host restart.
+- Use secondary text colors for small labels so both themes meet contrast requirements
+  after the Harness palette change.
+
+## 1.0.1 — 2026-08-23
+
+- Treat a DSH child that settles with `stopReason: "error"` but delivers non-empty plain text as a
+  completed member contribution. The original stop reason stays durable and Run Center shows a
+  protocol-delivery warning; rejected promises, cleanup failures, empty output, timeouts, and other
+  stop reasons such as `max-tokens` remain failures.
+- Raise the default per-member handoff summary ceiling from 4,000 to 16,000 characters so long-form
+  Markdown deliverables are not silently cut at the old boundary.
+- Add a durable, versioned, import/export-safe per-team `handoffSummaryMaxChars` setting with a
+  1,000–32,000 character range, Host/RPC/client validation, Settings UI, and bilingual guidance.
+  Complete raw output remains in Run Center, while dependency and lead prompts retain independent
+  aggregate bounds.
+- Move the mixed Host/client contract handshake to RPC v4 and align development plus CI smoke
+  coverage with DSH `0.1.1-rc.2`, the reporter's reproduced environment.
+
+## 1.0.0 — 2026-08-19
+
+- **Structured retrospective synthesis**: the main Agent no longer produces a flat "synthesize
+  these results" summary. After every squad run it now delivers a six-section retrospective:
+  1. squad execution summary with per-member outcomes, 2. what went well, 3. what did not go well
+  with root causes, 4. knowledge gap analysis classifying gaps as missing repository knowledge,
+  missing user-supplied domain knowledge, scope/planning issues, or tool/execution limitations,
+  5. concrete improvement recommendations for progressive disclosure or direct documentation, and
+  6. a final verdict on squad effectiveness.
+- Fix `.cursor/rules` and `.dsh/rules` backtick escaping in the progressive-disclosure guidance
+  inside the retrospective prompt.
+
+## 0.5.0 — 2026-08-17
+
+- Add first-class **Team**, **Solo**, and **Inherited** conversation modes plus a durable one-shot
+  override and project default. Cold boot, refresh, and live Host reconnect now rehydrate without
+  requiring users to re-save a team or wait behind a permanently disabled control.
+- Make the active conversation's model route the bounded workflow planner by default. It can skip
+  unsuitable work, select an adaptive subset, produce role-specific assignments and an acyclic
+  dependency graph, or fall back to a deterministic plan when structured planning fails.
+- Add bounded parallel DAG execution, foreground/background runs, official Jobs integration,
+  cancellation, crash reconciliation, linked whole/member retry, configurable retention, plan
+  preview, and an optional reviewer/repair loop capped at two rounds.
+- Keep automatic run/version retention opt-in (`0` by default), so upgrades never silently delete
+  existing history; explicit positive limits still provide bounded cleanup.
+- Prevent descendant explosions with lineage checks, fail-closed denial of every detected subagent
+  tool name, bounded prompts/handoffs, a durable latest-user-message claim, and one normalized plan
+  per run. Repeated model-tool calls for one user message cannot start duplicate teams.
+- Stream the official provider token projection across planner, member, review, and repair phases;
+  preserve uncached input/cache read/cache write/output buckets; keep retry totals monotonic; and
+  label coverage as full, partial, or unavailable instead of treating missing samples as zero.
+- Add reproducible team versions containing member snapshots, definition backup preview/apply,
+  portable recipes with copy/merge and primary/fallback route remapping, impact warnings, and
+  compensating rollback for aborted or failed multi-table writes.
+- Rebuild the Web experience into focused Composer, Teams/Members/Recipes Settings, Run Center, and
+  Insights surfaces with official live locale updates, keyboard/focus handling, inline validation,
+  dirty-form guards, light/dark theme tokens, and narrow-screen layouts.
+- Separate strict new-write schemas from permissive legacy readers so existing v0.4 records and v1
+  exports—including previously valid large or empty records—still reopen and import safely.
+- Add Host and rendered-client regression suites, an isolated fresh-profile install/restart smoke,
+  browser accessibility/keyboard/reconnect checks, package-closure and secret audits, immutable
+  GitHub Actions, release preflight, governance files, recipe examples, and a reproducible README
+  capture pipeline. Final release evidence is recorded in `docs/v0.5-acceptance.md`.
+
+## 0.4.1 — 2026-08-17
+
+- Prevent recursive squad explosions by excluding delegated sessions from automatic mode, denying
+  team/subagent tools inside members, and rejecting nested dispatches at the service boundary.
+- Dispatch only the latest user message and deduplicate guaranteed dispatch by session/message trace.
+- Stream official `tokenUsage` projection changes into active run/member rows, subtract fork seed
+  usage, and show **Metering…** until a provider reports instead of displaying a false zero.
+- Make the parent conversation's Main Agent the default dynamic workflow planner: it assigns every
+  configured member exactly once according to role/model/tool capabilities, while fixed order remains
+  an explicit override and planning failures fall back to differentiated role-scoped assignments.
+- Rehydrate the persisted team catalog and per-conversation/project selection after every Web
+  reconnect, with bounded cold-start retries so restarting DSH no longer requires re-saving a team.
+- Keep an explicitly disabled Solo conversation immediately interactive after refresh, while
+  unresolved inherited project defaults continue hydrating in the background.
+
+## 0.4.0 — 2026-08-17
+
+- Run the selected squad reliably from the host `agent/pre-step` path before the lead model answers.
+- Add a conversation **Team runs** view and live run dock with durable progress, outputs, retry state,
+  cancellation, timings, child IDs, and official provider-reported token usage buckets.
+- Add optional planning leads, fixed/model-planned ordering, bounded parallelism, member timeouts,
+  continue/stop/retry-once policies, fallback model routes, and soft token budgets.
+- Add per-project team defaults with explicit per-conversation opt-out.
+- Add quick-start templates, visual tool policies, team cloning, immutable revisions/restore, route
+  diagnostics, and safer merge/replace import previews.
+- Fix the composer switch being locked during Harness's normal `adjudicating` phase.
+- Fix the Export action and add visible success/error feedback.
+- Upgrade the browser/host RPC contract to revision 2 and add validated endpoints for runs,
+  revisions, diagnostics, project defaults, import, and export.
+
+## 0.1.0 — 2026-08-15
+
+- Initial public preview with persistent agents/squads, Web Settings UI, per-conversation selection,
+  serial/parallel dispatch, spawn/fork/chain context, import/export, and `dispatch_to_squad`.

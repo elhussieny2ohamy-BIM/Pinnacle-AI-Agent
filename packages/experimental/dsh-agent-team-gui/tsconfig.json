@@ -1,0 +1,52 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "target": "ES2024",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2024", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "useDefineForClassFields": true,
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "noEmitOnError": true,
+    "types": ["node"],
+    "rootDir": "src",
+    "outDir": "lib/types",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo"
+  },
+  "include": [
+    "src"
+  ],
+  "references": [
+    { "path": "../../../vendor/cordis" },
+    { "path": "../../../vendor/schemastery" },
+    { "path": "../../../packages/core/agent" },
+    { "path": "../../../packages/llm/llm" },
+    { "path": "../../../packages/jobs/jobs" },
+    { "path": "../../../packages/util/brand" },
+    { "path": "../../../packages/core/session" },
+    { "path": "../../../packages/storage/storage-domain" },
+    { "path": "../../../packages/subagent/subagent" },
+    { "path": "../../../packages/core/tools" },
+    { "path": "../../../packages/util/values" },
+    { "path": "../../../packages/client/connection" },
+    { "path": "../../../packages/api/session-controller/tsconfig.host.json" },
+    { "path": "../../../packages/client/locale" },
+    { "path": "../../../packages/client/ui-renderer" },
+    { "path": "../../../packages/client/ui-session" },
+    { "path": "../../../packages/client/ui-conversation/tsconfig.client.json" },
+    { "path": "../../../packages/client/ui-settings/tsconfig.host.json" },
+    { "path": "../../../packages/client/ui-slots" }
+  ]
+}

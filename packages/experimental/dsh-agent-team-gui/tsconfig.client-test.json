@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.client.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
+    "noEmit": true,
+    "rootDir": ".",
+    "tsBuildInfoFile": "lib/tsconfig.client-test.tsbuildinfo",
+    "types": ["node"]
+  },
+  "include": [
+    "src/client/**/*.ts",
+    "src/client/**/*.tsx",
+    "tests/**/*.client.spec.ts",
+    "tests/**/*.client.spec.tsx",
+    "tests/smoke/client-setup.ts",
+    "vitest.client.config.ts"
+  ]
+}
