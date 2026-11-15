@@ -1,0 +1,16 @@
+{
+  "name": "@pinnacle/pack-aec",
+  "version": "0.1.4",
+  "private": true,
+  "description": "AEC pack for the PINNACLE MCP hub: Revit, Navisworks, AutoCAD, Civil 3D, Rhino, and SketchUp module declarations.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "README.md"
+  ],
+  "license": "UNLICENSED"
+}

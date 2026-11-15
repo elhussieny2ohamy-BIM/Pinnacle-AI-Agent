@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "PINNACLE MCP",
+    "description": "Supervise the Pinnacle AEC MCP modules: discovery, connection state, write policy, backup readiness, and diagnostics."
+  }
+}

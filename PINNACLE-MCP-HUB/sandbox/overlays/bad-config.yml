@@ -1,0 +1,5 @@
+# Test overlay A: malformed policy value must fail with a field-naming error.
+- id: pinnacle-mcp-hub
+  config:
+    defaults:
+      writeMode: nope
