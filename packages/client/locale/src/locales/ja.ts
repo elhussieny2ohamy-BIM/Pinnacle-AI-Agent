@@ -34,7 +34,7 @@ export const ja = {
   'collapse': '折りたたむ',
   'expand': '展開',
   'back': '戻る',
-  'brand.localBuild': 'DSHローカルビルド',
+  'brand.localBuild': 'PINNACLE AI AGENT',
   'workspace.defaultName': 'デフォルトワークスペース',
   'unknown': '不明',
   'none': 'なし',
@@ -44,4 +44,5 @@ export const ja = {
   'markdown.truncatedCharacters': '… {total}文字で切り捨て',
   'number.thousand': '{value}K',
   'number.million': '{value}M',
+  'footer.by': 'By: Elhussieny Tohamy',
 } satisfies Record<keyof typeof en, string>

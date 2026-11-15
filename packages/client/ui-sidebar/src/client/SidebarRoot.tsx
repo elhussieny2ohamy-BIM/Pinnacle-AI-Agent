@@ -338,10 +338,10 @@ export function SidebarRoot({
           const identity = (
             <span className={css.brandIdentity} aria-hidden="true">
               <span className={css.brandMark}>
-                {renderSlot('sidebar.brand.mark', { size: 24 }, {
+                {renderSlot('sidebar.brand.mark', { size: 26 }, {
                   fallback: buildVersion === undefined
-                    ? <FishLogo size={24} />
-                    : <span className={css.copyVersion} data-copy-version onClick={copyVersion(buildVersion)}><FishLogo size={24} /></span>,
+                    ? <FishLogo size={26} />
+                    : <span className={css.copyVersion} data-copy-version onClick={copyVersion(buildVersion)}><FishLogo size={26} /></span>,
                 })}
               </span>
               <span className={css.brandName}>
@@ -351,7 +351,6 @@ export function SidebarRoot({
                     : (
                       <span className={clsx(css.localBuildBrand, css.copyVersion)} data-copy-version onClick={copyVersion(buildVersion)}>
                         <span className={css.localBuildTitle}>{t('brand.localBuild')}</span>
-                        <span className={css.buildVersion}>{buildVersion}</span>
                       </span>
                     ),
                 })}

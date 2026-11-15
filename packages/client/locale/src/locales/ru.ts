@@ -34,7 +34,7 @@ export const ru = {
   'collapse': 'Свернуть',
   'expand': 'Развернуть',
   'back': 'Назад',
-  'brand.localBuild': 'Локальная сборка DSH',
+  'brand.localBuild': 'PINNACLE AI AGENT',
   'workspace.defaultName': 'Рабочая область по умолчанию',
   'unknown': 'Неизвестно',
   'none': 'Нет',
@@ -44,4 +44,5 @@ export const ru = {
   'markdown.truncatedCharacters': '… обрезано до {total} символов',
   'number.thousand': '{value}K',
   'number.million': '{value}M',
+  'footer.by': 'By: Elhussieny Tohamy',
 } satisfies Record<keyof typeof en, string>

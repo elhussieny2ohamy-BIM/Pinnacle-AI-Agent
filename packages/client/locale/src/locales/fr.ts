@@ -34,7 +34,7 @@ export const fr = {
   'collapse': 'Réduire',
   'expand': 'Développer',
   'back': 'Retour',
-  'brand.localBuild': 'Version locale de DSH',
+  'brand.localBuild': 'PINNACLE AI AGENT',
   'workspace.defaultName': 'Espace de travail par défaut',
   'unknown': 'Inconnu',
   'none': 'Aucun',
@@ -44,4 +44,5 @@ export const fr = {
   'markdown.truncatedCharacters': '… tronqué à {total} caractères',
   'number.thousand': '{value}K',
   'number.million': '{value}M',
+  'footer.by': 'By: Elhussieny Tohamy',
 } satisfies Record<keyof typeof en, string>
