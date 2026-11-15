@@ -1,10 +1,10 @@
 /**
- * @tbyaan/pack-aec — portable declarations for the team's AEC MCP servers.
+ * @pinnacle/pack-aec â€” portable declarations for the team's AEC MCP servers.
  *
- * Every machine-specific path may be overridden with a TBYAAN_* environment
+ * Every machine-specific path may be overridden with a PINNACLE_* environment
  * variable. Defaults use per-user install locations and standard Autodesk
  * roots; no source checkout or drive letter is embedded in the package.
- * @module @tbyaan/pack-aec
+ * @module @pinnacle/pack-aec
  */
 
 import { existsSync, readdirSync } from 'node:fs'
@@ -21,7 +21,7 @@ function override(name, fallback) {
   return value ? value : fallback
 }
 
-const UV_BIN = override('TBYAAN_UV_BIN', env.UV_TOOL_BIN_DIR || join(USERPROFILE, '.local', 'bin'))
+const UV_BIN = override('PINNACLE_UV_BIN', env.UV_TOOL_BIN_DIR || join(USERPROFILE, '.local', 'bin'))
 
 function firstExisting(paths, fallback) {
   return paths.find(path => path && existsSync(path)) || fallback
@@ -46,9 +46,9 @@ function newestVersionedExecutable(roots, executable) {
   return null
 }
 
-const revitExe = override('TBYAAN_REVIT_EXE', join(PROGRAMFILES, 'Autodesk', 'Revit 2025', 'Revit.exe'))
+const revitExe = override('PINNACLE_REVIT_EXE', join(PROGRAMFILES, 'Autodesk', 'Revit 2025', 'Revit.exe'))
 const rvtMcpServer = override(
-  'TBYAAN_RVT_MCP_EXE',
+  'PINNACLE_RVT_MCP_EXE',
   join(LOCALAPPDATA, 'Bimwright', 'rvt-mcp', 'server', 'current', 'rvt-mcp.exe'),
 )
 
@@ -57,7 +57,7 @@ const navisVersionRoots = [
   join(LOCALAPPDATA, 'Navisworks MCP', 'versions'),
 ]
 const navisMcpServer = override(
-  'TBYAAN_NAVIS_MCP_EXE',
+  'PINNACLE_NAVIS_MCP_EXE',
   firstExisting([
     join(LOCALAPPDATA, 'NavisHelper', 'McpServer', 'NavisHelper.McpServer.exe'),
     join(LOCALAPPDATA, 'Navisworks MCP', 'McpServer', 'NavisHelper.McpServer.exe'),
@@ -70,27 +70,27 @@ const navisAppPaths = ['2024', '2025', '2026', '2027'].flatMap(year => [
 ])
 
 const autocadMcpServer = override(
-  'TBYAAN_AUTOCAD_MCP_EXE',
+  'PINNACLE_AUTOCAD_MCP_EXE',
   firstExisting([
     join(UV_BIN, 'autocad-mcp.exe'),
     join(APPDATA, 'MCP AutoCAD', 'MCPAutoCADServer.exe'),
   ], join(UV_BIN, 'autocad-mcp.exe')),
 )
 const autocadExe = override(
-  'TBYAAN_AUTOCAD_EXE',
+  'PINNACLE_AUTOCAD_EXE',
   join(PROGRAMFILES, 'Autodesk', 'AutoCAD 2026', 'acad.exe'),
 )
 const civil3dRoot = override(
-  'TBYAAN_CIVIL3D_ROOT',
+  'PINNACLE_CIVIL3D_ROOT',
   join(PROGRAMFILES, 'Autodesk', 'AutoCAD 2026'),
 )
 const civil3dServerPath = override(
-  'TBYAAN_CIVIL3D_SERVER_JS',
+  'PINNACLE_CIVIL3D_SERVER_JS',
   join(APPDATA, 'MCP Civil 3D', 'index.js'),
 )
 
 const rhinoMcpServer = override(
-  'TBYAAN_RHINO_MCP_EXE',
+  'PINNACLE_RHINO_MCP_EXE',
   firstExisting([
     join(UV_BIN, 'rhino-mcp.exe'),
     join(APPDATA, 'MCP Rhino', 'MCPRhinoServer.exe'),
@@ -100,11 +100,11 @@ const rhinoAppPaths = ['7', '8'].map(version =>
   join(PROGRAMFILES, 'McNeel', 'Rhinoceros', version, 'System', 'Rhino.exe'))
 
 const sketchupServerPath = override(
-  'TBYAAN_SKETCHUP_SERVER_JS',
+  'PINNACLE_SKETCHUP_SERVER_JS',
   join(LOCALAPPDATA, 'Programs', 'SketchUp MCP', 'server', 'index.mjs'),
 )
-const sketchupNode = override('TBYAAN_NODE_EXE', 'node')
-const sketchupRoot = override('TBYAAN_SKETCHUP_ROOT', join(PROGRAMFILES, 'SketchUp'))
+const sketchupNode = override('PINNACLE_NODE_EXE', 'node')
+const sketchupRoot = override('PINNACLE_SKETCHUP_ROOT', join(PROGRAMFILES, 'SketchUp'))
 const sketchupAppPaths = (() => {
   try {
     return readdirSync(sketchupRoot, { withFileTypes: true })
@@ -116,7 +116,7 @@ const sketchupAppPaths = (() => {
 })()
 
 export const pack = {
-  name: '@tbyaan/pack-aec',
+  name: '@pinnacle/pack-aec',
   version: '0.1.3',
   modules: [
     {
@@ -159,7 +159,7 @@ export const pack = {
           join(LOCALAPPDATA, 'Navisworks MCP', 'McpServer', 'NavisHelper.McpServer.exe'),
           join(LOCALAPPDATA, 'NavisHelper', 'versions', '*', 'NavisHelper.McpServer.exe'),
           join(LOCALAPPDATA, 'Navisworks MCP', 'versions', '*', 'NavisHelper.McpServer.exe'),
-          ...(env.TBYAAN_NAVIS_MCP_EXE ? [env.TBYAAN_NAVIS_MCP_EXE] : []),
+          ...(env.PINNACLE_NAVIS_MCP_EXE ? [env.PINNACLE_NAVIS_MCP_EXE] : []),
         ],
         appPaths: navisAppPaths,
       },
@@ -195,7 +195,7 @@ export const pack = {
       backup: { supported: false },
       server: {
         transport: 'stdio',
-        command: override('TBYAAN_NODE_EXE', 'node'),
+        command: override('PINNACLE_NODE_EXE', 'node'),
         args: [civil3dServerPath, '--stdio'],
         env: {},
         cwd: join(APPDATA, 'MCP Civil 3D'),

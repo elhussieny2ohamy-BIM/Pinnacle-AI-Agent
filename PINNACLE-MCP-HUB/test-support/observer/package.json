@@ -1,0 +1,12 @@
+{
+  "name": "pinnacle-hub-observer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Test-only observer: writes pinnacle-hub module status transitions to JSONL for the Phase 2 live proof.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  }
+}
+

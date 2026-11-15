@@ -1,4 +1,0 @@
-# Test overlay B: a second activation must be refused by the double-load guard.
-- insert:
-    - id: tbyaan-mcp-hub-duplicate
-      name: '@tbyaan/mcp-hub'

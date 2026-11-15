@@ -1,6 +1,6 @@
 # ============================================================
 # Pinnacle AI Agent - workspace root repository
-# Tracks ONLY our custom code (TBYAAN-MCP-HUB + pack-aec + docs).
+# Tracks ONLY our custom code (PINNACLE-MCP-HUB + pack-aec + docs).
 # Everything heavy / external / third-party is ignored.
 # ============================================================
 
@@ -47,4 +47,4 @@ desktop.ini
 .idea/
 
 # --- Keep our own built hub lib (small, part of the package) ---
-!TBYAAN-MCP-HUB/lib/
+!PINNACLE-MCP-HUB/lib/

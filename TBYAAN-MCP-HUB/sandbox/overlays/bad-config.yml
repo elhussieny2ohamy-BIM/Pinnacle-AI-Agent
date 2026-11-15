@@ -1,5 +1,0 @@
-# Test overlay A: malformed policy value must fail with a field-naming error.
-- id: tbyaan-mcp-hub
-  config:
-    defaults:
-      writeMode: nope

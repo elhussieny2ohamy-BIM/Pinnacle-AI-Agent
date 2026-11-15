@@ -1,8 +1,8 @@
 {
-  "name": "@tbyaan/pack-aec",
-  "version": "0.1.3",
+  "name": "@pinnacle/pack-aec",
+  "version": "0.1.4",
   "private": true,
-  "description": "AEC pack for the TBYAAN MCP hub: Revit, Navisworks, AutoCAD, Civil 3D, Rhino, and SketchUp module declarations.",
+  "description": "AEC pack for the PINNACLE MCP hub: Revit, Navisworks, AutoCAD, Civil 3D, Rhino, and SketchUp module declarations.",
   "type": "module",
   "main": "index.js",
   "exports": {

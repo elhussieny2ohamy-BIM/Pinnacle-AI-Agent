@@ -1,251 +1,251 @@
-# PINNACLE AI AGENT — دليل المشروع الشامل
+# PINNACLE AI AGENT â€” Ø¯Ù„ÙŠÙ„ Ø§Ù„Ù…Ø´Ø±ÙˆØ¹ Ø§Ù„Ø´Ø§Ù…Ù„
 
-> **المسار:** `D:\OPENCODE\MCPs`
-> **آخر تحديث:** 2026-11-15
-> **نظام التشغيل:** Windows 10 (x64) · **Shell:** PowerShell / Git Bash · **Node:** ‏≥ 24.9
+> **Ø§Ù„Ù…Ø³Ø§Ø±:** `D:\OPENCODE\MCPs`
+> **Ø¢Ø®Ø± ØªØ­Ø¯ÙŠØ«:** 2026-11-15
+> **Ù†Ø¸Ø§Ù… Ø§Ù„ØªØ´ØºÙŠÙ„:** Windows 10 (x64) Â· **Shell:** PowerShell / Git Bash Â· **Node:** â€â‰¥ 24.9
 
-هذا الملف نظرة عامة واحدة تجمع كل مكوّنات الـ workspace: المنصة، إضافة مركز MCP، حزمة AEC، خوادم CAD/BIM،
-نظام البراند (PINNACLE)، وطريقة التشغيل والبناء والصيانة.
-
----
-
-## 1) نظرة عامة
-
-المشروع عبارة عن **Agent Harness** (منصة وكلاء برمجية) مبنية على معمارية **Cordis** قائمة على الإضافات،
-وأُعيد تسميتها/توسيمها لتكون **PINNACLE AI AGENT**. تُقدَّم كتطبيق **Web** يعمل محليًا على المنفذ **3080**،
-ومتصلة بخوادم **MCP** لبرامج الهندسة (Autodesk Revit / AutoCAD / Civil 3D / Navisworks، وRhino، وSketchUp)
-عبر **مركز MCP** مخصّص يعرض حالة الوحدات وسياسات الكتابة والنسخ الاحتياطي والتشخيص.
-
-```
-[متصفح]  ──HTTP(token)──▶  dsh web (127.0.0.1:3080)
-                              │  Cordis host + client (all-plugin)
-                              ├─ @tbyaan/mcp-hub  (مركز PINNACLE MCP)
-                              │     └─ @tbyaan/pack-aec (تعريفات وحدات AEC)
-                              └─ خوادم MCP خارجية: Revit · AutoCAD · Civil 3D · Navisworks · Rhino · SketchUp
-```
+Ù‡Ø°Ø§ Ø§Ù„Ù…Ù„Ù Ù†Ø¸Ø±Ø© Ø¹Ø§Ù…Ø© ÙˆØ§Ø­Ø¯Ø© ØªØ¬Ù…Ø¹ ÙƒÙ„ Ù…ÙƒÙˆÙ‘Ù†Ø§Øª Ø§Ù„Ù€ workspace: Ø§Ù„Ù…Ù†ØµØ©ØŒ Ø¥Ø¶Ø§ÙØ© Ù…Ø±ÙƒØ² MCPØŒ Ø­Ø²Ù…Ø© AECØŒ Ø®ÙˆØ§Ø¯Ù… CAD/BIMØŒ
+Ù†Ø¸Ø§Ù… Ø§Ù„Ø¨Ø±Ø§Ù†Ø¯ (PINNACLE)ØŒ ÙˆØ·Ø±ÙŠÙ‚Ø© Ø§Ù„ØªØ´ØºÙŠÙ„ ÙˆØ§Ù„Ø¨Ù†Ø§Ø¡ ÙˆØ§Ù„ØµÙŠØ§Ù†Ø©.
 
 ---
 
-## 2) مكوّنات الـ Workspace
+## 1) Ù†Ø¸Ø±Ø© Ø¹Ø§Ù…Ø©
 
-| المجلد | الوصف | التقنية / الإصدار |
+Ø§Ù„Ù…Ø´Ø±ÙˆØ¹ Ø¹Ø¨Ø§Ø±Ø© Ø¹Ù† **Agent Harness** (Ù…Ù†ØµØ© ÙˆÙƒÙ„Ø§Ø¡ Ø¨Ø±Ù…Ø¬ÙŠØ©) Ù…Ø¨Ù†ÙŠØ© Ø¹Ù„Ù‰ Ù…Ø¹Ù…Ø§Ø±ÙŠØ© **Cordis** Ù‚Ø§Ø¦Ù…Ø© Ø¹Ù„Ù‰ Ø§Ù„Ø¥Ø¶Ø§ÙØ§ØªØŒ
+ÙˆØ£ÙØ¹ÙŠØ¯ ØªØ³Ù…ÙŠØªÙ‡Ø§/ØªÙˆØ³ÙŠÙ…Ù‡Ø§ Ù„ØªÙƒÙˆÙ† **PINNACLE AI AGENT**. ØªÙÙ‚Ø¯ÙŽÙ‘Ù… ÙƒØªØ·Ø¨ÙŠÙ‚ **Web** ÙŠØ¹Ù…Ù„ Ù…Ø­Ù„ÙŠÙ‹Ø§ Ø¹Ù„Ù‰ Ø§Ù„Ù…Ù†ÙØ° **3080**ØŒ
+ÙˆÙ…ØªØµÙ„Ø© Ø¨Ø®ÙˆØ§Ø¯Ù… **MCP** Ù„Ø¨Ø±Ø§Ù…Ø¬ Ø§Ù„Ù‡Ù†Ø¯Ø³Ø© (Autodesk Revit / AutoCAD / Civil 3D / NavisworksØŒ ÙˆRhinoØŒ ÙˆSketchUp)
+Ø¹Ø¨Ø± **Ù…Ø±ÙƒØ² MCP** Ù…Ø®ØµÙ‘Øµ ÙŠØ¹Ø±Ø¶ Ø­Ø§Ù„Ø© Ø§Ù„ÙˆØ­Ø¯Ø§Øª ÙˆØ³ÙŠØ§Ø³Ø§Øª Ø§Ù„ÙƒØªØ§Ø¨Ø© ÙˆØ§Ù„Ù†Ø³Ø® Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠ ÙˆØ§Ù„ØªØ´Ø®ÙŠØµ.
+
+```
+[Ù…ØªØµÙØ­]  â”€â”€HTTP(token)â”€â”€â–¶  dsh web (127.0.0.1:3080)
+                              â”‚  Cordis host + client (all-plugin)
+                              â”œâ”€ @pinnacle/mcp-hub  (Ù…Ø±ÙƒØ² PINNACLE MCP)
+                              â”‚     â””â”€ @pinnacle/pack-aec (ØªØ¹Ø±ÙŠÙØ§Øª ÙˆØ­Ø¯Ø§Øª AEC)
+                              â””â”€ Ø®ÙˆØ§Ø¯Ù… MCP Ø®Ø§Ø±Ø¬ÙŠØ©: Revit Â· AutoCAD Â· Civil 3D Â· Navisworks Â· Rhino Â· SketchUp
+```
+
+---
+
+## 2) Ù…ÙƒÙˆÙ‘Ù†Ø§Øª Ø§Ù„Ù€ Workspace
+
+| Ø§Ù„Ù…Ø¬Ù„Ø¯ | Ø§Ù„ÙˆØµÙ | Ø§Ù„ØªÙ‚Ù†ÙŠØ© / Ø§Ù„Ø¥ØµØ¯Ø§Ø± |
 |---|---|---|
-| `deepseek-harness/` | المنصة الأساسية (الـ Harness) + الواجهة Web/Desktop | `@deepseek-ai/dsh-root@0.2.2-rc.3` · TypeScript ESM · Cordis |
-| `TBYAAN-MCP-HUB/` | إضافة مركز MCP (عنصر السايدبار «PINNACLE MCP» + صفحة Modules/Doctor) | `@tbyaan/mcp-hub@0.1.3` · React 18 · tsdown |
-| `pack-aec/` | حزمة تعريفات وحدات AEC (Revit, Navisworks, AutoCAD, Civil 3D, Rhino, SketchUp) | `@tbyaan/pack-aec@0.1.3` |
-| `rvt-mcp-master/` | خادم MCP لـ Revit (RevitCortex) | MCP (rvt-mcp 1.2.x) |
-| `Autocad-MCP-main/` | خادم MCP لـ AutoCAD | AutoCAD MCP Pro |
-| `Civil3D-mcp-main/` | خادم MCP لـ Civil 3D | `civil3d-mcp@1.2.1` |
-| `NavisWorksMaster-main/` | خادم MCP لـ Navisworks | MCP server |
-| `rhino-mcp-main/` | خادم MCP لـ Rhino (standalone / bridge) | `rhino_mcp` (Python) |
-| `Sketchup MCP/` | خادم MCP لـ SketchUp | Node + Ruby bridge |
-| `Archive/` | ملفات مؤرشفة (غير مدمجة) | — |
-| `Pinnacle-Logo.png` | الأصل الرئيسي لشعار الكلمة (Wordmark) | 1234×550 PNG |
-| `Pinnacle sympol logo.png` | الأصل الرئيسي لرمز البراند (Symbol/Mark) | 431×590 PNG |
+| `deepseek-harness/` | Ø§Ù„Ù…Ù†ØµØ© Ø§Ù„Ø£Ø³Ø§Ø³ÙŠØ© (Ø§Ù„Ù€ Harness) + Ø§Ù„ÙˆØ§Ø¬Ù‡Ø© Web/Desktop | `@deepseek-ai/dsh-root@0.2.2-rc.3` Â· TypeScript ESM Â· Cordis |
+| `PINNACLE-MCP-HUB/` | Ø¥Ø¶Ø§ÙØ© Ù…Ø±ÙƒØ² MCP (Ø¹Ù†ØµØ± Ø§Ù„Ø³Ø§ÙŠØ¯Ø¨Ø§Ø± Â«PINNACLE MCPÂ» + ØµÙØ­Ø© Modules/Doctor) | `@pinnacle/mcp-hub@0.1.3` Â· React 18 Â· tsdown |
+| `pack-aec/` | Ø­Ø²Ù…Ø© ØªØ¹Ø±ÙŠÙØ§Øª ÙˆØ­Ø¯Ø§Øª AEC (Revit, Navisworks, AutoCAD, Civil 3D, Rhino, SketchUp) | `@pinnacle/pack-aec@0.1.3` |
+| `rvt-mcp-master/` | Ø®Ø§Ø¯Ù… MCP Ù„Ù€ Revit (RevitCortex) | MCP (rvt-mcp 1.2.x) |
+| `Autocad-MCP-main/` | Ø®Ø§Ø¯Ù… MCP Ù„Ù€ AutoCAD | AutoCAD MCP Pro |
+| `Civil3D-mcp-main/` | Ø®Ø§Ø¯Ù… MCP Ù„Ù€ Civil 3D | `civil3d-mcp@1.2.1` |
+| `NavisWorksMaster-main/` | Ø®Ø§Ø¯Ù… MCP Ù„Ù€ Navisworks | MCP server |
+| `rhino-mcp-main/` | Ø®Ø§Ø¯Ù… MCP Ù„Ù€ Rhino (standalone / bridge) | `rhino_mcp` (Python) |
+| `Sketchup MCP/` | Ø®Ø§Ø¯Ù… MCP Ù„Ù€ SketchUp | Node + Ruby bridge |
+| `Archive/` | Ù…Ù„ÙØ§Øª Ù…Ø¤Ø±Ø´ÙØ© (ØºÙŠØ± Ù…Ø¯Ù…Ø¬Ø©) | â€” |
+| `Pinnacle-Logo.png` | Ø§Ù„Ø£ØµÙ„ Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ Ù„Ø´Ø¹Ø§Ø± Ø§Ù„ÙƒÙ„Ù…Ø© (Wordmark) | 1234Ã—550 PNG |
+| `Pinnacle sympol logo.png` | Ø§Ù„Ø£ØµÙ„ Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ Ù„Ø±Ù…Ø² Ø§Ù„Ø¨Ø±Ø§Ù†Ø¯ (Symbol/Mark) | 431Ã—590 PNG |
 
-> ملاحظة: الجذر `D:\OPENCODE\MCPs` **ليس** مستودع git؛ المستودع الحقيقي هو `deepseek-harness/.git`.
-
----
-
-## 3) المنصة: `deepseek-harness`
-
-### المعمارية
-- **all-plugin Cordis**: كل سلوك يُضاف عبر `ctx.effect()` / `ctx.on()` ونقاط امتداد موثّقة.
-- **pnpm workspaces** بمعمارية `packages/<group>/<pkg>/` تحت بادئة `@deepseek-ai/dsh-*`.
-- **ESM everywhere** (`"type": "module"`)، وNode `>=24.9`.
-- واجهتان: **Web** (الافتراضية هنا) و**Desktop**.
-
-### مجموعات الحزم المهمة
-| المجموعة | الدور |
-|---|---|
-| `core/` | API الوكيل والجلسات |
-| `api/` | BFF للاتصال عن بُعد |
-| `mcp/` | الأدوات الخارجية (MCP) |
-| `boot/` | إقلاع التطبيق وقراءة بيانات الإضافات (package meta) |
-| `client/` | كل واجهة المستخدم (ui-sidebar, ui-conversation, ui-plugin-manager, ui-brand-official, ui-primitives …) |
-| `bundle/` | حزم البروفايل (profiles) |
-| `native/` | إضافة Node الأصلية (native addon) |
-| `website/` | توثيق VitePress |
-| `scripts/` | بوابات البناء والتوليد (gates) |
-
-### الواجهة (Client)
-- **Sidebar**: الهيدر يعرض البراند (رمز + كلمة Pinnacle)، وعناصر لوحة تشمل **PINNACLE MCP**.
-- **البراند الرسمي**: `packages/client/ui-brand-official/src/client/Brand.tsx` يسجّل الخانات
-  `sidebar.brand.mark` و`sidebar.brand.name`.
-- **الرموز الأولية**: `packages/client/ui-primitives/src/FishLogo.tsx` (الرمز) و`BrandWordmark.tsx` (الكلمة).
+> Ù…Ù„Ø§Ø­Ø¸Ø©: Ø§Ù„Ø¬Ø°Ø± `D:\OPENCODE\MCPs` **Ù„ÙŠØ³** Ù…Ø³ØªÙˆØ¯Ø¹ gitØ› Ø§Ù„Ù…Ø³ØªÙˆØ¯Ø¹ Ø§Ù„Ø­Ù‚ÙŠÙ‚ÙŠ Ù‡Ùˆ `deepseek-harness/.git`.
 
 ---
 
-## 4) البراند: PINNACLE
+## 3) Ø§Ù„Ù…Ù†ØµØ©: `deepseek-harness`
 
-### الاسم المعروض
-- الاسم الكامل: **PINNACLE AI AGENT**
-- الاسم المختصر (PWA): **PINNACLE** / **TBH**
-- عنوان التبويب: **PINNACLE AI AGENT**
+### Ø§Ù„Ù…Ø¹Ù…Ø§Ø±ÙŠØ©
+- **all-plugin Cordis**: ÙƒÙ„ Ø³Ù„ÙˆÙƒ ÙŠÙØ¶Ø§Ù Ø¹Ø¨Ø± `ctx.effect()` / `ctx.on()` ÙˆÙ†Ù‚Ø§Ø· Ø§Ù…ØªØ¯Ø§Ø¯ Ù…ÙˆØ«Ù‘Ù‚Ø©.
+- **pnpm workspaces** Ø¨Ù…Ø¹Ù…Ø§Ø±ÙŠØ© `packages/<group>/<pkg>/` ØªØ­Øª Ø¨Ø§Ø¯Ø¦Ø© `@deepseek-ai/dsh-*`.
+- **ESM everywhere** (`"type": "module"`)ØŒ ÙˆNode `>=24.9`.
+- ÙˆØ§Ø¬Ù‡ØªØ§Ù†: **Web** (Ø§Ù„Ø§ÙØªØ±Ø§Ø¶ÙŠØ© Ù‡Ù†Ø§) Ùˆ**Desktop**.
 
-### مصدر الحقيقة للأصول
-| الأصل | الملف |
+### Ù…Ø¬Ù…ÙˆØ¹Ø§Øª Ø§Ù„Ø­Ø²Ù… Ø§Ù„Ù…Ù‡Ù…Ø©
+| Ø§Ù„Ù…Ø¬Ù…ÙˆØ¹Ø© | Ø§Ù„Ø¯ÙˆØ± |
 |---|---|
-| الرمز (Symbol) | `deepseek-harness/packages/client/ui-primitives/src/tbyaan-assets.ts` → `TBYAAN_SYMBOL_DATA_URI` |
-| الكلمة (Wordmark) | نفس الملف → `TBYAAN_WORDMARK_DATA_URI` |
-| الأصول الرئيسية (خارج المستودع) | `D:\OPENCODE\MCPs\Pinnacle-Logo.png` + `D:\OPENCODE\MCPs\Pinnacle sympol logo.png` |
+| `core/` | API Ø§Ù„ÙˆÙƒÙŠÙ„ ÙˆØ§Ù„Ø¬Ù„Ø³Ø§Øª |
+| `api/` | BFF Ù„Ù„Ø§ØªØµØ§Ù„ Ø¹Ù† Ø¨ÙØ¹Ø¯ |
+| `mcp/` | Ø§Ù„Ø£Ø¯ÙˆØ§Øª Ø§Ù„Ø®Ø§Ø±Ø¬ÙŠØ© (MCP) |
+| `boot/` | Ø¥Ù‚Ù„Ø§Ø¹ Ø§Ù„ØªØ·Ø¨ÙŠÙ‚ ÙˆÙ‚Ø±Ø§Ø¡Ø© Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø¥Ø¶Ø§ÙØ§Øª (package meta) |
+| `client/` | ÙƒÙ„ ÙˆØ§Ø¬Ù‡Ø© Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù… (ui-sidebar, ui-conversation, ui-plugin-manager, ui-brand-official, ui-primitives â€¦) |
+| `bundle/` | Ø­Ø²Ù… Ø§Ù„Ø¨Ø±ÙˆÙØ§ÙŠÙ„ (profiles) |
+| `native/` | Ø¥Ø¶Ø§ÙØ© Node Ø§Ù„Ø£ØµÙ„ÙŠØ© (native addon) |
+| `website/` | ØªÙˆØ«ÙŠÙ‚ VitePress |
+| `scripts/` | Ø¨ÙˆØ§Ø¨Ø§Øª Ø§Ù„Ø¨Ù†Ø§Ø¡ ÙˆØ§Ù„ØªÙˆÙ„ÙŠØ¯ (gates) |
 
-> الأصول تُضمَّن كـ **Base64 data URIs** داخل `tbyaan-assets.ts` مع أبعادها.
-> أسماء المعرّفات الداخلية تبقى `TBYAAN_*` (توافق برمجي)، بينما **النص والصور المعروضة = Pinnacle**.
+### Ø§Ù„ÙˆØ§Ø¬Ù‡Ø© (Client)
+- **Sidebar**: Ø§Ù„Ù‡ÙŠØ¯Ø± ÙŠØ¹Ø±Ø¶ Ø§Ù„Ø¨Ø±Ø§Ù†Ø¯ (Ø±Ù…Ø² + ÙƒÙ„Ù…Ø© Pinnacle)ØŒ ÙˆØ¹Ù†Ø§ØµØ± Ù„ÙˆØ­Ø© ØªØ´Ù…Ù„ **PINNACLE MCP**.
+- **Ø§Ù„Ø¨Ø±Ø§Ù†Ø¯ Ø§Ù„Ø±Ø³Ù…ÙŠ**: `packages/client/ui-brand-official/src/client/Brand.tsx` ÙŠØ³Ø¬Ù‘Ù„ Ø§Ù„Ø®Ø§Ù†Ø§Øª
+  `sidebar.brand.mark` Ùˆ`sidebar.brand.name`.
+- **Ø§Ù„Ø±Ù…ÙˆØ² Ø§Ù„Ø£ÙˆÙ„ÙŠØ©**: `packages/client/ui-primitives/src/FishLogo.tsx` (Ø§Ù„Ø±Ù…Ø²) Ùˆ`BrandWordmark.tsx` (Ø§Ù„ÙƒÙ„Ù…Ø©).
 
-### أيقونات الويب والـ Desktop
-| الموقع | الملفات |
+---
+
+## 4) Ø§Ù„Ø¨Ø±Ø§Ù†Ø¯: PINNACLE
+
+### Ø§Ù„Ø§Ø³Ù… Ø§Ù„Ù…Ø¹Ø±ÙˆØ¶
+- Ø§Ù„Ø§Ø³Ù… Ø§Ù„ÙƒØ§Ù…Ù„: **PINNACLE AI AGENT**
+- Ø§Ù„Ø§Ø³Ù… Ø§Ù„Ù…Ø®ØªØµØ± (PWA): **PINNACLE** / **TBH**
+- Ø¹Ù†ÙˆØ§Ù† Ø§Ù„ØªØ¨ÙˆÙŠØ¨: **PINNACLE AI AGENT**
+
+### Ù…ØµØ¯Ø± Ø§Ù„Ø­Ù‚ÙŠÙ‚Ø© Ù„Ù„Ø£ØµÙˆÙ„
+| Ø§Ù„Ø£ØµÙ„ | Ø§Ù„Ù…Ù„Ù |
+|---|---|
+| Ø§Ù„Ø±Ù…Ø² (Symbol) | `deepseek-harness/packages/client/ui-primitives/src/pinnacle-assets.ts` â†’ `PINNACLE_SYMBOL_DATA_URI` |
+| Ø§Ù„ÙƒÙ„Ù…Ø© (Wordmark) | Ù†ÙØ³ Ø§Ù„Ù…Ù„Ù â†’ `PINNACLE_WORDMARK_DATA_URI` |
+| Ø§Ù„Ø£ØµÙˆÙ„ Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ© (Ø®Ø§Ø±Ø¬ Ø§Ù„Ù…Ø³ØªÙˆØ¯Ø¹) | `D:\OPENCODE\MCPs\Pinnacle-Logo.png` + `D:\OPENCODE\MCPs\Pinnacle sympol logo.png` |
+
+> Ø§Ù„Ø£ØµÙˆÙ„ ØªÙØ¶Ù…ÙŽÙ‘Ù† ÙƒÙ€ **Base64 data URIs** Ø¯Ø§Ø®Ù„ `pinnacle-assets.ts` Ù…Ø¹ Ø£Ø¨Ø¹Ø§Ø¯Ù‡Ø§.
+> Ø£Ø³Ù…Ø§Ø¡ Ø§Ù„Ù…Ø¹Ø±Ù‘ÙØ§Øª Ø§Ù„Ø¯Ø§Ø®Ù„ÙŠØ© ØªØ¨Ù‚Ù‰ `PINNACLE_*` (ØªÙˆØ§ÙÙ‚ Ø¨Ø±Ù…Ø¬ÙŠ)ØŒ Ø¨ÙŠÙ†Ù…Ø§ **Ø§Ù„Ù†Øµ ÙˆØ§Ù„ØµÙˆØ± Ø§Ù„Ù…Ø¹Ø±ÙˆØ¶Ø© = Pinnacle**.
+
+### Ø£ÙŠÙ‚ÙˆÙ†Ø§Øª Ø§Ù„ÙˆÙŠØ¨ ÙˆØ§Ù„Ù€ Desktop
+| Ø§Ù„Ù…ÙˆÙ‚Ø¹ | Ø§Ù„Ù…Ù„ÙØ§Øª |
 |---|---|
 | `apps/web/public/` | `favicon.svg`, `favicon-dark.svg`, `favicon.ico`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `manifest.webmanifest` |
-| `apps/desktop/resources/` | `icon.png`, `icon-windows.png`, `icon-macos.png` + نسخ `.svg` |
-| `apps/web/index.html` | روابط الأيقونات مع `?v=...` (cache-buster) |
+| `apps/desktop/resources/` | `icon.png`, `icon-windows.png`, `icon-macos.png` + Ù†Ø³Ø® `.svg` |
+| `apps/web/index.html` | Ø±ÙˆØ§Ø¨Ø· Ø§Ù„Ø£ÙŠÙ‚ÙˆÙ†Ø§Øª Ù…Ø¹ `?v=...` (cache-buster) |
 
-### مركز MCP (البراند داخل الإضافة)
-| الأصل | الملف |
+### Ù…Ø±ÙƒØ² MCP (Ø§Ù„Ø¨Ø±Ø§Ù†Ø¯ Ø¯Ø§Ø®Ù„ Ø§Ù„Ø¥Ø¶Ø§ÙØ©)
+| Ø§Ù„Ø£ØµÙ„ | Ø§Ù„Ù…Ù„Ù |
 |---|---|
-| أيقونة الحزمة | `TBYAAN-MCP-HUB/icon.png` (رمز Pinnacle) |
-| اسم العرض + الوصف | `TBYAAN-MCP-HUB/locale/{en,ar,zh}.json` → `meta.title = "PINNACLE MCP"` |
-| مفتاح الاسم في الكود | `TBYAAN-MCP-HUB/src/client/locales.ts` → `panel: 'PINNACLE MCP'` |
+| Ø£ÙŠÙ‚ÙˆÙ†Ø© Ø§Ù„Ø­Ø²Ù…Ø© | `PINNACLE-MCP-HUB/icon.png` (Ø±Ù…Ø² Pinnacle) |
+| Ø§Ø³Ù… Ø§Ù„Ø¹Ø±Ø¶ + Ø§Ù„ÙˆØµÙ | `PINNACLE-MCP-HUB/locale/{en,ar,zh}.json` â†’ `meta.title = "PINNACLE MCP"` |
+| Ù…ÙØªØ§Ø­ Ø§Ù„Ø§Ø³Ù… ÙÙŠ Ø§Ù„ÙƒÙˆØ¯ | `PINNACLE-MCP-HUB/src/client/locales.ts` â†’ `panel: 'PINNACLE MCP'` |
 
-### إجراء تحديث الشعار (Checklist)
-1. استبدل أصل الـ PNG في `D:\OPENCODE\MCPs`.
-2. أعد توليد `tbyaan-assets.ts` من الأصلين (Base64 + الأبعاد).
-3. أعد توليد أيقونات `apps/web/public/` و`apps/desktop/resources/` من الرمز.
-4. ارفع رقم الـ cache-buster في `apps/web/index.html` (مثال `?v=YYYYMMDD`).
-5. `pnpm run build:artifacts` ثم أعد تشغيل السيرفر وتأكد بصريًا من التبويب والسايدبار.
+### Ø¥Ø¬Ø±Ø§Ø¡ ØªØ­Ø¯ÙŠØ« Ø§Ù„Ø´Ø¹Ø§Ø± (Checklist)
+1. Ø§Ø³ØªØ¨Ø¯Ù„ Ø£ØµÙ„ Ø§Ù„Ù€ PNG ÙÙŠ `D:\OPENCODE\MCPs`.
+2. Ø£Ø¹Ø¯ ØªÙˆÙ„ÙŠØ¯ `pinnacle-assets.ts` Ù…Ù† Ø§Ù„Ø£ØµÙ„ÙŠÙ† (Base64 + Ø§Ù„Ø£Ø¨Ø¹Ø§Ø¯).
+3. Ø£Ø¹Ø¯ ØªÙˆÙ„ÙŠØ¯ Ø£ÙŠÙ‚ÙˆÙ†Ø§Øª `apps/web/public/` Ùˆ`apps/desktop/resources/` Ù…Ù† Ø§Ù„Ø±Ù…Ø².
+4. Ø§Ø±ÙØ¹ Ø±Ù‚Ù… Ø§Ù„Ù€ cache-buster ÙÙŠ `apps/web/index.html` (Ù…Ø«Ø§Ù„ `?v=YYYYMMDD`).
+5. `pnpm run build:artifacts` Ø«Ù… Ø£Ø¹Ø¯ ØªØ´ØºÙŠÙ„ Ø§Ù„Ø³ÙŠØ±ÙØ± ÙˆØªØ£ÙƒØ¯ Ø¨ØµØ±ÙŠÙ‹Ø§ Ù…Ù† Ø§Ù„ØªØ¨ÙˆÙŠØ¨ ÙˆØ§Ù„Ø³Ø§ÙŠØ¯Ø¨Ø§Ø±.
 
 ---
 
-## 5) التشغيل (PowerShell)
+## 5) Ø§Ù„ØªØ´ØºÙŠÙ„ (PowerShell)
 
 ```powershell
-# 1) تشغيل مباشر باستخدام البِلد الجاهز
+# 1) ØªØ´ØºÙŠÙ„ Ù…Ø¨Ø§Ø´Ø± Ø¨Ø§Ø³ØªØ®Ø¯Ø§Ù… Ø§Ù„Ø¨ÙÙ„Ø¯ Ø§Ù„Ø¬Ø§Ù‡Ø²
 cd D:\OPENCODE\MCPs\deepseek-harness
 pnpm dsh web
 
-# 2) تطوير: يبني الـ artifacts ثم يشغّل (ويُعيد بناء client عند التعديل)
+# 2) ØªØ·ÙˆÙŠØ±: ÙŠØ¨Ù†ÙŠ Ø§Ù„Ù€ artifacts Ø«Ù… ÙŠØ´ØºÙ‘Ù„ (ÙˆÙŠÙØ¹ÙŠØ¯ Ø¨Ù†Ø§Ø¡ client Ø¹Ù†Ø¯ Ø§Ù„ØªØ¹Ø¯ÙŠÙ„)
 pnpm run dev:web
 
-# 3) تشغيل بدون بناء (الأسرع بعد build سابق)
+# 3) ØªØ´ØºÙŠÙ„ Ø¨Ø¯ÙˆÙ† Ø¨Ù†Ø§Ø¡ (Ø§Ù„Ø£Ø³Ø±Ø¹ Ø¨Ø¹Ø¯ build Ø³Ø§Ø¨Ù‚)
 pnpm run start:web
 
-# 4) لا تفتح المتصفح تلقائيًا
+# 4) Ù„Ø§ ØªÙØªØ­ Ø§Ù„Ù…ØªØµÙØ­ ØªÙ„Ù‚Ø§Ø¦ÙŠÙ‹Ø§
 pnpm dsh web --no-open
 ```
 
-- **عنوان الدخول**: يظهر في سطر التشغيل بالشكل
-  `dsh web: http://127.0.0.1:3080/?token=...` — فتحُه يحوّل (`303`) ويكتب الكوكي، وبعدها الجذر يرد `200`.
-- **الجيل الأول قد يستغرق ~1 دقيقة** لأن خوادم MCP (Revit/Rhino/…) تهيّئ أدواتها قبل ربط المنفذ.
+- **Ø¹Ù†ÙˆØ§Ù† Ø§Ù„Ø¯Ø®ÙˆÙ„**: ÙŠØ¸Ù‡Ø± ÙÙŠ Ø³Ø·Ø± Ø§Ù„ØªØ´ØºÙŠÙ„ Ø¨Ø§Ù„Ø´ÙƒÙ„
+  `dsh web: http://127.0.0.1:3080/?token=...` â€” ÙØªØ­ÙÙ‡ ÙŠØ­ÙˆÙ‘Ù„ (`303`) ÙˆÙŠÙƒØªØ¨ Ø§Ù„ÙƒÙˆÙƒÙŠØŒ ÙˆØ¨Ø¹Ø¯Ù‡Ø§ Ø§Ù„Ø¬Ø°Ø± ÙŠØ±Ø¯ `200`.
+- **Ø§Ù„Ø¬ÙŠÙ„ Ø§Ù„Ø£ÙˆÙ„ Ù‚Ø¯ ÙŠØ³ØªØºØ±Ù‚ ~1 Ø¯Ù‚ÙŠÙ‚Ø©** Ù„Ø£Ù† Ø®ÙˆØ§Ø¯Ù… MCP (Revit/Rhino/â€¦) ØªÙ‡ÙŠÙ‘Ø¦ Ø£Ø¯ÙˆØ§ØªÙ‡Ø§ Ù‚Ø¨Ù„ Ø±Ø¨Ø· Ø§Ù„Ù…Ù†ÙØ°.
 
-### تحرير المنفذ 3080 عند كونه مشغولًا
+### ØªØ­Ø±ÙŠØ± Ø§Ù„Ù…Ù†ÙØ° 3080 Ø¹Ù†Ø¯ ÙƒÙˆÙ†Ù‡ Ù…Ø´ØºÙˆÙ„Ù‹Ø§
 ```powershell
 Get-NetTCPConnection -LocalPort 3080 -State Listen | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }
 ```
 
 ---
 
-## 6) البناء والجودة (Building & Quality)
+## 6) Ø§Ù„Ø¨Ù†Ø§Ø¡ ÙˆØ§Ù„Ø¬ÙˆØ¯Ø© (Building & Quality)
 
 ```powershell
 cd D:\OPENCODE\MCPs\deepseek-harness
-pnpm run build:artifacts   # 8 بوابات: native addon · Host Typert · host compiler · Host bundle
-                           #          · Desktop bundle · client compiler · Client bundle · Web build
+pnpm run build:artifacts   # 8 Ø¨ÙˆØ§Ø¨Ø§Øª: native addon Â· Host Typert Â· host compiler Â· Host bundle
+                           #          Â· Desktop bundle Â· client compiler Â· Client bundle Â· Web build
 pnpm run build             # build:artifacts + build:check
 pnpm run typecheck
 pnpm run lint
-pnpm run test              # اختبارات الوحدة
-pnpm run doc-sync          # بوابات التوثيق
+pnpm run test              # Ø§Ø®ØªØ¨Ø§Ø±Ø§Øª Ø§Ù„ÙˆØ­Ø¯Ø©
+pnpm run doc-sync          # Ø¨ÙˆØ§Ø¨Ø§Øª Ø§Ù„ØªÙˆØ«ÙŠÙ‚
 ```
 
-- حزم البروفايل المصدر: `~/.dsh/profiles/web` (انظر §8).
+- Ø­Ø²Ù… Ø§Ù„Ø¨Ø±ÙˆÙØ§ÙŠÙ„ Ø§Ù„Ù…ØµØ¯Ø±: `~/.dsh/profiles/web` (Ø§Ù†Ø¸Ø± Â§8).
 
 ---
 
-## 7) مركز MCP وحزمة AEC
+## 7) Ù…Ø±ÙƒØ² MCP ÙˆØ­Ø²Ù…Ø© AEC
 
-### `@tbyaan/mcp-hub`
-- **السايدبار**: يسجّل عنصرًا في `sidebar.panellist` بمعرّف `mcp-hub` والاسم **PINNACLE MCP** وترتيب `order: 100`.
-  - الملف: `src/client/index.ts` → `label: () => t('panel')`.
-  - الأيقونة: `src/client/HubPage.tsx` → `HubPageIcon` (رمز Pinnacle من `src/client/brand.ts`).
-- **الصفحة الرئيسية**: `main` بالمفتاح `mcp-hub`، شاشتان: **Modules** و**Doctor**.
-- **الاتصال بالـ Host**: عبر Typert remote namespace `tbyaanHub` (`src/remote.ts`).
-- **التعريف/التكوين**: `cordis.patch.yml` يضيف الصف `id: tbyaan-mcp-hub`
-  بإعدادات `packs: ['@tbyaan/pack-aec']`، `discovery.applyMode: confirm`،
+### `@pinnacle/mcp-hub`
+- **Ø§Ù„Ø³Ø§ÙŠØ¯Ø¨Ø§Ø±**: ÙŠØ³Ø¬Ù‘Ù„ Ø¹Ù†ØµØ±Ù‹Ø§ ÙÙŠ `sidebar.panellist` Ø¨Ù…Ø¹Ø±Ù‘Ù `mcp-hub` ÙˆØ§Ù„Ø§Ø³Ù… **PINNACLE MCP** ÙˆØªØ±ØªÙŠØ¨ `order: 100`.
+  - Ø§Ù„Ù…Ù„Ù: `src/client/index.ts` â†’ `label: () => t('panel')`.
+  - Ø§Ù„Ø£ÙŠÙ‚ÙˆÙ†Ø©: `src/client/HubPage.tsx` â†’ `HubPageIcon` (Ø±Ù…Ø² Pinnacle Ù…Ù† `src/client/brand.ts`).
+- **Ø§Ù„ØµÙØ­Ø© Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©**: `main` Ø¨Ø§Ù„Ù…ÙØªØ§Ø­ `mcp-hub`ØŒ Ø´Ø§Ø´ØªØ§Ù†: **Modules** Ùˆ**Doctor**.
+- **Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ù€ Host**: Ø¹Ø¨Ø± Typert remote namespace `pinnacleHub` (`src/remote.ts`).
+- **Ø§Ù„ØªØ¹Ø±ÙŠÙ/Ø§Ù„ØªÙƒÙˆÙŠÙ†**: `cordis.patch.yml` ÙŠØ¶ÙŠÙ Ø§Ù„ØµÙ `id: pinnacle-mcp-hub`
+  Ø¨Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª `packs: ['@pinnacle/pack-aec']`ØŒ `discovery.applyMode: confirm`ØŒ
   `defaults: { profile: coordination, writeMode: deny, maxVisibleTools: 120 }`.
 
-### `@tbyaan/pack-aec`
-- يعلن وحدات AEC: **Revit, Navisworks, AutoCAD, Civil 3D, Rhino, SketchUp**.
-- يُثبَّت مع المركز في نفس البروفايل.
+### `@pinnacle/pack-aec`
+- ÙŠØ¹Ù„Ù† ÙˆØ­Ø¯Ø§Øª AEC: **Revit, Navisworks, AutoCAD, Civil 3D, Rhino, SketchUp**.
+- ÙŠÙØ«Ø¨ÙŽÙ‘Øª Ù…Ø¹ Ø§Ù„Ù…Ø±ÙƒØ² ÙÙŠ Ù†ÙØ³ Ø§Ù„Ø¨Ø±ÙˆÙØ§ÙŠÙ„.
 
-### بناء وتثبيت الإضافة
+### Ø¨Ù†Ø§Ø¡ ÙˆØªØ«Ø¨ÙŠØª Ø§Ù„Ø¥Ø¶Ø§ÙØ©
 ```powershell
-cd D:\OPENCODE\MCPs\TBYAAN-MCP-HUB
-pnpm run build        # tsdown → lib/index.js (host, ESM) + lib/client.js (client, CJS-factory)
+cd D:\OPENCODE\MCPs\PINNACLE-MCP-HUB
+pnpm run build        # tsdown â†’ lib/index.js (host, ESM) + lib/client.js (client, CJS-factory)
 pnpm run typecheck
 ```
-- تثبيت الناتج في البروفايل (بديل سريع عن إعادة تثبيت الـ tarball):
+- ØªØ«Ø¨ÙŠØª Ø§Ù„Ù†Ø§ØªØ¬ ÙÙŠ Ø§Ù„Ø¨Ø±ÙˆÙØ§ÙŠÙ„ (Ø¨Ø¯ÙŠÙ„ Ø³Ø±ÙŠØ¹ Ø¹Ù† Ø¥Ø¹Ø§Ø¯Ø© ØªØ«Ø¨ÙŠØª Ø§Ù„Ù€ tarball):
 ```powershell
-$H = "$HOME\.dsh\profiles\web\node_modules\@tbyaan\mcp-hub"
+$H = "$HOME\.dsh\profiles\web\node_modules\@pinnacle\mcp-hub"
 Copy-Item lib\* "$H\lib\" -Force
 Copy-Item locale, icon.png, package.json "$H\" -Recurse -Force
 ```
 
 ---
 
-## 8) الإعدادات والبروفايلات (`~/.dsh`)
+## 8) Ø§Ù„Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª ÙˆØ§Ù„Ø¨Ø±ÙˆÙØ§ÙŠÙ„Ø§Øª (`~/.dsh`)
 
-| المسار | المحتوى |
+| Ø§Ù„Ù…Ø³Ø§Ø± | Ø§Ù„Ù…Ø­ØªÙˆÙ‰ |
 |---|---|
-| `~/.dsh/profiles/web/cordis.yml` | جذر البروفايل (قائمة فارغة، التركيب عبر patches) |
-| `~/.dsh/profiles/web/cordis.patch.yml` | تعديلات البروفايل |
-| `~/.dsh/profiles/web/package.json` | حزم البروفايل: `@deepseek-ai/dsh-base`, `@deepseek-ai/dsh-web-app`, `@tbyaan/mcp-hub` |
-| `~/.dsh/profiles/web/node_modules/` | الإضافات المثبّتة (منها مركز MCP) |
-| `~/.dsh/installers/` | حزم tarball المثبّتة |
-| `~/.dsh/sessions/` · `storages/` · `logs/` | الجلسات والتخزين والسجلات |
-| `~/.dsh/tbyaan-hub/` | بيانات المركز (audit / backups) |
+| `~/.dsh/profiles/web/cordis.yml` | Ø¬Ø°Ø± Ø§Ù„Ø¨Ø±ÙˆÙØ§ÙŠÙ„ (Ù‚Ø§Ø¦Ù…Ø© ÙØ§Ø±ØºØ©ØŒ Ø§Ù„ØªØ±ÙƒÙŠØ¨ Ø¹Ø¨Ø± patches) |
+| `~/.dsh/profiles/web/cordis.patch.yml` | ØªØ¹Ø¯ÙŠÙ„Ø§Øª Ø§Ù„Ø¨Ø±ÙˆÙØ§ÙŠÙ„ |
+| `~/.dsh/profiles/web/package.json` | Ø­Ø²Ù… Ø§Ù„Ø¨Ø±ÙˆÙØ§ÙŠÙ„: `@deepseek-ai/dsh-base`, `@deepseek-ai/dsh-web-app`, `@pinnacle/mcp-hub` |
+| `~/.dsh/profiles/web/node_modules/` | Ø§Ù„Ø¥Ø¶Ø§ÙØ§Øª Ø§Ù„Ù…Ø«Ø¨Ù‘ØªØ© (Ù…Ù†Ù‡Ø§ Ù…Ø±ÙƒØ² MCP) |
+| `~/.dsh/installers/` | Ø­Ø²Ù… tarball Ø§Ù„Ù…Ø«Ø¨Ù‘ØªØ© |
+| `~/.dsh/sessions/` Â· `storages/` Â· `logs/` | Ø§Ù„Ø¬Ù„Ø³Ø§Øª ÙˆØ§Ù„ØªØ®Ø²ÙŠÙ† ÙˆØ§Ù„Ø³Ø¬Ù„Ø§Øª |
+| `~/.dsh/pinnacle-hub/` | Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ù…Ø±ÙƒØ² (audit / backups) |
 
 ---
 
-## 9) المسارات المرجعية السريعة
+## 9) Ø§Ù„Ù…Ø³Ø§Ø±Ø§Øª Ø§Ù„Ù…Ø±Ø¬Ø¹ÙŠØ© Ø§Ù„Ø³Ø±ÙŠØ¹Ø©
 
-| ماذا تريد | المسار |
+| Ù…Ø§Ø°Ø§ ØªØ±ÙŠØ¯ | Ø§Ù„Ù…Ø³Ø§Ø± |
 |---|---|
-| تشغيل الويب | `deepseek-harness/` → `pnpm dsh web` |
-| أصول البراند (Base64) | `deepseek-harness/packages/client/ui-primitives/src/tbyaan-assets.ts` |
-| عنصر السايدبار/البراند | `.../ui-sidebar/src/client/SidebarRoot.tsx` |
-| البراند الرسمي (slots) | `.../ui-brand-official/src/client/Brand.tsx` |
-| أيقونات الويب | `deepseek-harness/apps/web/public/` |
-| إعدادات HTML/العنوان | `deepseek-harness/apps/web/index.html` |
-| مدير الإضافات (الواجهة) | `deepseek-harness/packages/client/ui-plugin-manager/` |
-| مركز MCP (client) | `TBYAAN-MCP-HUB/src/client/index.ts` · `HubPage.tsx` · `locales.ts` |
-| مركز MCP (brand) | `TBYAAN-MCP-HUB/src/client/brand.ts` · `icon.png` · `locale/*.json` |
-| حزمة AEC | `pack-aec/` |
-| بروفايل التشغيل | `~/.dsh/profiles/web` |
+| ØªØ´ØºÙŠÙ„ Ø§Ù„ÙˆÙŠØ¨ | `deepseek-harness/` â†’ `pnpm dsh web` |
+| Ø£ØµÙˆÙ„ Ø§Ù„Ø¨Ø±Ø§Ù†Ø¯ (Base64) | `deepseek-harness/packages/client/ui-primitives/src/pinnacle-assets.ts` |
+| Ø¹Ù†ØµØ± Ø§Ù„Ø³Ø§ÙŠØ¯Ø¨Ø§Ø±/Ø§Ù„Ø¨Ø±Ø§Ù†Ø¯ | `.../ui-sidebar/src/client/SidebarRoot.tsx` |
+| Ø§Ù„Ø¨Ø±Ø§Ù†Ø¯ Ø§Ù„Ø±Ø³Ù…ÙŠ (slots) | `.../ui-brand-official/src/client/Brand.tsx` |
+| Ø£ÙŠÙ‚ÙˆÙ†Ø§Øª Ø§Ù„ÙˆÙŠØ¨ | `deepseek-harness/apps/web/public/` |
+| Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª HTML/Ø§Ù„Ø¹Ù†ÙˆØ§Ù† | `deepseek-harness/apps/web/index.html` |
+| Ù…Ø¯ÙŠØ± Ø§Ù„Ø¥Ø¶Ø§ÙØ§Øª (Ø§Ù„ÙˆØ§Ø¬Ù‡Ø©) | `deepseek-harness/packages/client/ui-plugin-manager/` |
+| Ù…Ø±ÙƒØ² MCP (client) | `PINNACLE-MCP-HUB/src/client/index.ts` Â· `HubPage.tsx` Â· `locales.ts` |
+| Ù…Ø±ÙƒØ² MCP (brand) | `PINNACLE-MCP-HUB/src/client/brand.ts` Â· `icon.png` Â· `locale/*.json` |
+| Ø­Ø²Ù…Ø© AEC | `pack-aec/` |
+| Ø¨Ø±ÙˆÙØ§ÙŠÙ„ Ø§Ù„ØªØ´ØºÙŠÙ„ | `~/.dsh/profiles/web` |
 
 ---
 
-## 10) قواعد وملاحظات مهمة
+## 10) Ù‚ÙˆØ§Ø¹Ø¯ ÙˆÙ…Ù„Ø§Ø­Ø¸Ø§Øª Ù…Ù‡Ù…Ø©
 
-- **لا ترفع بيانات اعتماد** (credentials/.env) إلى أي مستودع، ولا تنشر لأي مشاركة داخلية من جلسة الوكيل.
-- **لا تنشئ commits** إلا عند الطلب الصريح.
-- **ESM فقط**، واستخدم أسماء الحزم عبر الحزم و`.ts` في الاستيرادات المحلية النسبية.
-- **نص الواجهة مملوك للـ locale** (عبر `t` وقواميس مكتوبة) ولا تُكتب نصوص المنتج مباشرة في المكوّنات.
-- إعدادات `cordis.yml` تسمح بـ `!!js` (وليس `!js`) تحت `config` و`disabled`؛ بقية الحقول حرفية.
-- عند تغيير أي سطح عام (CLI/بروفايل/إعدادات/API) سجّل التغيير في دليل الترقية.
+- **Ù„Ø§ ØªØ±ÙØ¹ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ø¹ØªÙ…Ø§Ø¯** (credentials/.env) Ø¥Ù„Ù‰ Ø£ÙŠ Ù…Ø³ØªÙˆØ¯Ø¹ØŒ ÙˆÙ„Ø§ ØªÙ†Ø´Ø± Ù„Ø£ÙŠ Ù…Ø´Ø§Ø±ÙƒØ© Ø¯Ø§Ø®Ù„ÙŠØ© Ù…Ù† Ø¬Ù„Ø³Ø© Ø§Ù„ÙˆÙƒÙŠÙ„.
+- **Ù„Ø§ ØªÙ†Ø´Ø¦ commits** Ø¥Ù„Ø§ Ø¹Ù†Ø¯ Ø§Ù„Ø·Ù„Ø¨ Ø§Ù„ØµØ±ÙŠØ­.
+- **ESM ÙÙ‚Ø·**ØŒ ÙˆØ§Ø³ØªØ®Ø¯Ù… Ø£Ø³Ù…Ø§Ø¡ Ø§Ù„Ø­Ø²Ù… Ø¹Ø¨Ø± Ø§Ù„Ø­Ø²Ù… Ùˆ`.ts` ÙÙŠ Ø§Ù„Ø§Ø³ØªÙŠØ±Ø§Ø¯Ø§Øª Ø§Ù„Ù…Ø­Ù„ÙŠØ© Ø§Ù„Ù†Ø³Ø¨ÙŠØ©.
+- **Ù†Øµ Ø§Ù„ÙˆØ§Ø¬Ù‡Ø© Ù…Ù…Ù„ÙˆÙƒ Ù„Ù„Ù€ locale** (Ø¹Ø¨Ø± `t` ÙˆÙ‚ÙˆØ§Ù…ÙŠØ³ Ù…ÙƒØªÙˆØ¨Ø©) ÙˆÙ„Ø§ ØªÙÙƒØªØ¨ Ù†ØµÙˆØµ Ø§Ù„Ù…Ù†ØªØ¬ Ù…Ø¨Ø§Ø´Ø±Ø© ÙÙŠ Ø§Ù„Ù…ÙƒÙˆÙ‘Ù†Ø§Øª.
+- Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª `cordis.yml` ØªØ³Ù…Ø­ Ø¨Ù€ `!!js` (ÙˆÙ„ÙŠØ³ `!js`) ØªØ­Øª `config` Ùˆ`disabled`Ø› Ø¨Ù‚ÙŠØ© Ø§Ù„Ø­Ù‚ÙˆÙ„ Ø­Ø±ÙÙŠØ©.
+- Ø¹Ù†Ø¯ ØªØºÙŠÙŠØ± Ø£ÙŠ Ø³Ø·Ø­ Ø¹Ø§Ù… (CLI/Ø¨Ø±ÙˆÙØ§ÙŠÙ„/Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª/API) Ø³Ø¬Ù‘Ù„ Ø§Ù„ØªØºÙŠÙŠØ± ÙÙŠ Ø¯Ù„ÙŠÙ„ Ø§Ù„ØªØ±Ù‚ÙŠØ©.
 
 ---
 
-## 11) استكشاف الأخطاء سريعًا
+## 11) Ø§Ø³ØªÙƒØ´Ø§Ù Ø§Ù„Ø£Ø®Ø·Ø§Ø¡ Ø³Ø±ÙŠØ¹Ù‹Ø§
 
-| العَرَض | السبب المحتمل | الحل |
+| Ø§Ù„Ø¹ÙŽØ±ÙŽØ¶ | Ø§Ù„Ø³Ø¨Ø¨ Ø§Ù„Ù…Ø­ØªÙ…Ù„ | Ø§Ù„Ø­Ù„ |
 |---|---|---|
-| `EADDRINUSE 127.0.0.1:3080` | سيرفر سابق ما زال حيًّا (عملية node تابعة) | اقتل العملية على المنفذ (§5) |
-| `401` على الجذر | فتح بدون توكن | استخدم رابط `?token=...` من سجل التشغيل |
-| الإقلاع بطيء | تهيئة خوادم MCP | انتظر حتى يظهر سطر `dsh web: http://...` |
-| تغييرات الإضافة لا تظهر | البِلد/النسخة في البروفايل قديمة | `pnpm run build` ثم انسخ `lib/` إلى البروفايل وأعد التشغيل |
-| تغييرات الشعار لا تظهر في التبويب | كاش المتصفح | حدّث `?v=` في `index.html` وأعد البناء + Hard Reload |
-| تحذير `disabling profile plugin undefined … startsWith` | صف/إضافة غير مكتملة التعريف في البروفايل | غير قاتل؛ راجع صفوف `cordis.patch.yml` إن أردت إزالته |
+| `EADDRINUSE 127.0.0.1:3080` | Ø³ÙŠØ±ÙØ± Ø³Ø§Ø¨Ù‚ Ù…Ø§ Ø²Ø§Ù„ Ø­ÙŠÙ‹Ù‘Ø§ (Ø¹Ù…Ù„ÙŠØ© node ØªØ§Ø¨Ø¹Ø©) | Ø§Ù‚ØªÙ„ Ø§Ù„Ø¹Ù…Ù„ÙŠØ© Ø¹Ù„Ù‰ Ø§Ù„Ù…Ù†ÙØ° (Â§5) |
+| `401` Ø¹Ù„Ù‰ Ø§Ù„Ø¬Ø°Ø± | ÙØªØ­ Ø¨Ø¯ÙˆÙ† ØªÙˆÙƒÙ† | Ø§Ø³ØªØ®Ø¯Ù… Ø±Ø§Ø¨Ø· `?token=...` Ù…Ù† Ø³Ø¬Ù„ Ø§Ù„ØªØ´ØºÙŠÙ„ |
+| Ø§Ù„Ø¥Ù‚Ù„Ø§Ø¹ Ø¨Ø·ÙŠØ¡ | ØªÙ‡ÙŠØ¦Ø© Ø®ÙˆØ§Ø¯Ù… MCP | Ø§Ù†ØªØ¸Ø± Ø­ØªÙ‰ ÙŠØ¸Ù‡Ø± Ø³Ø·Ø± `dsh web: http://...` |
+| ØªØºÙŠÙŠØ±Ø§Øª Ø§Ù„Ø¥Ø¶Ø§ÙØ© Ù„Ø§ ØªØ¸Ù‡Ø± | Ø§Ù„Ø¨ÙÙ„Ø¯/Ø§Ù„Ù†Ø³Ø®Ø© ÙÙŠ Ø§Ù„Ø¨Ø±ÙˆÙØ§ÙŠÙ„ Ù‚Ø¯ÙŠÙ…Ø© | `pnpm run build` Ø«Ù… Ø§Ù†Ø³Ø® `lib/` Ø¥Ù„Ù‰ Ø§Ù„Ø¨Ø±ÙˆÙØ§ÙŠÙ„ ÙˆØ£Ø¹Ø¯ Ø§Ù„ØªØ´ØºÙŠÙ„ |
+| ØªØºÙŠÙŠØ±Ø§Øª Ø§Ù„Ø´Ø¹Ø§Ø± Ù„Ø§ ØªØ¸Ù‡Ø± ÙÙŠ Ø§Ù„ØªØ¨ÙˆÙŠØ¨ | ÙƒØ§Ø´ Ø§Ù„Ù…ØªØµÙØ­ | Ø­Ø¯Ù‘Ø« `?v=` ÙÙŠ `index.html` ÙˆØ£Ø¹Ø¯ Ø§Ù„Ø¨Ù†Ø§Ø¡ + Hard Reload |
+| ØªØ­Ø°ÙŠØ± `disabling profile plugin undefined â€¦ startsWith` | ØµÙ/Ø¥Ø¶Ø§ÙØ© ØºÙŠØ± Ù…ÙƒØªÙ…Ù„Ø© Ø§Ù„ØªØ¹Ø±ÙŠÙ ÙÙŠ Ø§Ù„Ø¨Ø±ÙˆÙØ§ÙŠÙ„ | ØºÙŠØ± Ù‚Ø§ØªÙ„Ø› Ø±Ø§Ø¬Ø¹ ØµÙÙˆÙ `cordis.patch.yml` Ø¥Ù† Ø£Ø±Ø¯Øª Ø¥Ø²Ø§Ù„ØªÙ‡ |
 
 ---
 
-*هذا الملف مرجع حيّ؛ حدّثه عند تغيير المسارات أو الإصدارات أو إجراءات التشغيل.*
+*Ù‡Ø°Ø§ Ø§Ù„Ù…Ù„Ù Ù…Ø±Ø¬Ø¹ Ø­ÙŠÙ‘Ø› Ø­Ø¯Ù‘Ø«Ù‡ Ø¹Ù†Ø¯ ØªØºÙŠÙŠØ± Ø§Ù„Ù…Ø³Ø§Ø±Ø§Øª Ø£Ùˆ Ø§Ù„Ø¥ØµØ¯Ø§Ø±Ø§Øª Ø£Ùˆ Ø¥Ø¬Ø±Ø§Ø¡Ø§Øª Ø§Ù„ØªØ´ØºÙŠÙ„.*

@@ -1,0 +1,10 @@
+# One bundle row activates the host and advertises the same package's dsh.client
+# contribution to the browser module loader.
+- insert:
+    - id: pinnacle-mcp-hub
+      name: '@pinnacle/mcp-hub'
+      config:
+        packs: ['@pinnacle/pack-aec']
+        discovery: { applyMode: confirm }
+        defaults: { profile: coordination, writeMode: deny, maxVisibleTools: 120 }
+
