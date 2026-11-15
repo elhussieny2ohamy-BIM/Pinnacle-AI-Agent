@@ -1,0 +1,50 @@
+# ============================================================
+# Pinnacle AI Agent - workspace root repository
+# Tracks ONLY our custom code (TBYAAN-MCP-HUB + pack-aec + docs).
+# Everything heavy / external / third-party is ignored.
+# ============================================================
+
+# --- Nested git repositories & huge external trees (not tracked here) ---
+/deepseek-harness/
+/rvt-mcp-master/
+/Autocad-MCP-main/
+/Civil3D-mcp-main/
+/NavisWorksMaster-main/
+/rhino-mcp-main/
+/Sketchup MCP/
+/Archive/
+
+# --- Root source archives (large, not needed in git) ---
+/*.zip
+
+# --- Dependencies & build artifacts ---
+node_modules/
+**/node_modules/
+dist/
+lib/**/*.map
+*.tgz
+out/
+build/
+obj/
+bin/
+venv/
+**/.venv/
+__pycache__/
+*.pyc
+.cache/
+.desktop-build/
+artifacts/
+
+# --- Local settings, logs, OS junk ---
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+.env
+.env.*
+*.user
+.vs/
+.idea/
+
+# --- Keep our own built hub lib (small, part of the package) ---
+!TBYAAN-MCP-HUB/lib/

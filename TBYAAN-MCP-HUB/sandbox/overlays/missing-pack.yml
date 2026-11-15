@@ -1,0 +1,5 @@
+# Test overlay C: an unresolvable pack must fail with a named pack and install hint.
+- id: tbyaan-mcp-hub
+  config:
+    packs:
+      - '@tbyaan/pack-does-not-exist'

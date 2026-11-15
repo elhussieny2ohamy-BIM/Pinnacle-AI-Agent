@@ -1,0 +1,12 @@
+﻿{
+  "name": "PINNACLE-backup-driver",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Test-only driver that exercises the hub's backup policy through the real tool pipeline.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  }
+}
+
