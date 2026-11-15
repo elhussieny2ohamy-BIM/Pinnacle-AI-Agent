@@ -48,3 +48,7 @@ desktop.ini
 
 # --- Keep our own built hub lib (small, part of the package) ---
 !PINNACLE-MCP-HUB/lib/
+
+# --- Local MCP scratch probes (kept on disk, not tracked) ---
+/test_*.py
+/find_packages.py
