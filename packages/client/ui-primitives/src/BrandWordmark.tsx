@@ -1,5 +1,5 @@
 import type { IconProps } from './icons/props.ts'
-import { TBYAAN_WORDMARK_DATA_URI, TBYAAN_WORDMARK_DIMENSIONS } from './tbyaan-assets.ts'
+import { PINNACLE_WORDMARK_DATA_URI, PINNACLE_WORDMARK_DIMENSIONS } from './pinnacle-assets.ts'
 
 /** Display options for the official brand wordmark. */
 export interface BrandWordmarkProps extends IconProps {
@@ -15,21 +15,21 @@ export interface BrandWordmarkProps extends IconProps {
  * @returns the wordmark svg (aria-hidden decorative brand art).
  */
 export function BrandWordmark({ size = 24, className }: BrandWordmarkProps) {
-  const aspect = TBYAAN_WORDMARK_DIMENSIONS.width / TBYAAN_WORDMARK_DIMENSIONS.height
+  const aspect = PINNACLE_WORDMARK_DIMENSIONS.width / PINNACLE_WORDMARK_DIMENSIONS.height
   const width = size * aspect
   return (
     <svg
       width={width}
       height={size}
       className={className}
-      viewBox={`0 0 ${TBYAAN_WORDMARK_DIMENSIONS.width} ${TBYAAN_WORDMARK_DIMENSIONS.height}`}
+      viewBox={`0 0 ${PINNACLE_WORDMARK_DIMENSIONS.width} ${PINNACLE_WORDMARK_DIMENSIONS.height}`}
       fill="none"
       aria-hidden="true"
     >
       <image
-        width={TBYAAN_WORDMARK_DIMENSIONS.width}
-        height={TBYAAN_WORDMARK_DIMENSIONS.height}
-        href={TBYAAN_WORDMARK_DATA_URI}
+        width={PINNACLE_WORDMARK_DIMENSIONS.width}
+        height={PINNACLE_WORDMARK_DIMENSIONS.height}
+        href={PINNACLE_WORDMARK_DATA_URI}
       />
     </svg>
   )

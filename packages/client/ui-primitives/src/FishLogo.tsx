@@ -1,8 +1,8 @@
 import type { IconProps } from './icons/props.ts'
-import { TBYAAN_SYMBOL_DATA_URI, TBYAAN_SYMBOL_DIMENSIONS } from './tbyaan-assets.ts'
+import { PINNACLE_SYMBOL_DATA_URI, PINNACLE_SYMBOL_DIMENSIONS } from './pinnacle-assets.ts'
 
 /** Native viewBox of the brand symbol mark (width and height in user units). */
-export const FISH_LOGO_VIEWBOX = { width: TBYAAN_SYMBOL_DIMENSIONS.width, height: TBYAAN_SYMBOL_DIMENSIONS.height }
+export const FISH_LOGO_VIEWBOX = { width: PINNACLE_SYMBOL_DIMENSIONS.width, height: PINNACLE_SYMBOL_DIMENSIONS.height }
 
 /** Silhouette path preserved for backwards interface compatibility. */
 export const FISH_LOGO_PATH = ''
@@ -26,7 +26,7 @@ export function FishLogo({ size = 24, className }: IconProps) {
       <image
         width={FISH_LOGO_VIEWBOX.width}
         height={FISH_LOGO_VIEWBOX.height}
-        href={TBYAAN_SYMBOL_DATA_URI}
+        href={PINNACLE_SYMBOL_DATA_URI}
       />
     </svg>
   )
