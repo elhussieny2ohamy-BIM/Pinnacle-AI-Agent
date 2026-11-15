@@ -1,0 +1,39 @@
+name: Sync DeepSeek Upstream
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # يتم التشغيل كل 6 ساعات تلقائياً
+  workflow_dispatch:         # يمكن تشغيله يدوياً من واجهة جيثاب anytime
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: سحب الكود الحالي من مستودعك
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: ضبط بيانات Git للبوت
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: إضافة مستودع DeepSeek الأصلي كمصدر للتحديث
+        run: |
+          git remote add upstream https://github.com/deepseek-ai/deepseek-harness.git || true
+          git fetch upstream
+
+      - name: دمج تحديثات DeepSeek في الفرع الرئيسي (master)
+        run: |
+          git checkout master
+          git merge upstream/master --no-edit || {
+            echo "❌ حدث تعارض في الدمج. تم إيقاف المزامنة تلقائياً."
+            git merge --abort
+            exit 1
+          }
+
+      - name: رفع التحديثات لجيثاب
+        run: |
+          git push origin master
