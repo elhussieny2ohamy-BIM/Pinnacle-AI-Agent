@@ -15,5 +15,5 @@ export function OfficialBrandMark({ size }: SidebarBrandMarkOwnerProps) {
  * @returns the official name wordmark.
  */
 export function OfficialBrandName() {
-  return <BrandWordmark includeMark={false} />
+  return <BrandWordmark includeMark={false} size={36} />
 }

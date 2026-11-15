@@ -36,7 +36,7 @@ export const de = {
   'subtitle.expand': 'Beschreibung für {name} ausklappen',
   'subtitle.collapse': 'Beschreibung für {name} einklappen',
   'back': 'Zurück',
-  'brand.localBuild': 'Lokaler DSH-Build',
+  'brand.localBuild': 'PINNACLE AI AGENT',
   'workspace.defaultName': 'Standardarbeitsbereich',
   'unknown': 'Unbekannt',
   'none': 'Keine',
@@ -46,4 +46,5 @@ export const de = {
   'markdown.truncatedCharacters': '… nach {total} Zeichen abgeschnitten',
   'number.thousand': '{value}K',
   'number.million': '{value}M',
+  'footer.by': 'By: Elhussieny Tohamy',
 } satisfies Record<keyof typeof en, string>

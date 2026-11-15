@@ -22,6 +22,7 @@ import type {
 import { CENTER_MIN, clampWidth, computeColumns, RIGHTBAR_DEFAULT_RATIO, RIGHTBAR_MAX_RATIO, RIGHTBAR_MIN, SIDEBAR_AUTO_COLLAPSE, SIDEBAR_COLLAPSED, SIDEBAR_DEFAULT, SIDEBAR_DRAWER_BREAKPOINT } from './columns.ts'
 import { DocumentTitle } from './DocumentTitle.tsx'
 import type { createLayoutStore } from './stores.ts'
+import { PINNACLE_LOGOS } from './pinnacle-logos.ts'
 import css from './AppFrame.module.css'
 
 /** Browser posture supplied by the root registration. */
@@ -323,6 +324,30 @@ export function AppFrame({
         </RightbarColumn>
       </>
       <div className={css.bottomRow} data-shell-bottom {...{ inert: drawerOpen ? '' : undefined }}>
+        <footer className={css.footer}>
+          <div className={css.footerSidePlaceholder} aria-hidden="true" />
+          <div className={css.footerLogosContainer}>
+            {PINNACLE_LOGOS.map(logo => (
+              <img
+                key={logo.id}
+                src={logo.dataUri}
+                alt={logo.title}
+                title={logo.title}
+                className={logo.isMain ? css.logoImgMain : css.logoImg}
+              />
+            ))}
+          </div>
+          <div className={css.footerCredit}>
+            <a
+              className={css.footerLink}
+              href="https://www.linkedin.com/in/elhussieny-tohamy-b3b3bb12b"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('footer.by')}
+            </a>
+          </div>
+        </footer>
         {renderSlot('shell.bottom', {})}
       </div>
       <div className={css.overlayLayer} data-shell-overlay>

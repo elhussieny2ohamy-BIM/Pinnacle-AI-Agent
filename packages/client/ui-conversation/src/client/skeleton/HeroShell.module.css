@@ -48,6 +48,14 @@
    the badge stranded beside a fragment. When the badge no longer fits beside
    the title it wraps to its own centered line below; while both fit, the group
    is content-sized and centering is a no-op, keeping the superscript snug. */
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
 .titleGroup {
   display: flex;
   flex-wrap: wrap;
@@ -57,6 +65,15 @@
   column-gap: 7px;
   row-gap: 4px;
   min-width: 0;
+}
+
+.tagline {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 400;
+  color: var(--dsw-alias-label-secondary);
+  text-align: center;
+  margin-top: 2px;
 }
 
 .previewBadge {

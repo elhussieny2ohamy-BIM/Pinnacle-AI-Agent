@@ -1,0 +1,64 @@
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write packages/experimental/dsh-remote-web-ui/README.md
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh:
+  en: 35fa1718e8a3bfc8
+  zh: 70ae377bddaca8c6
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/what-it-does:
+  en: f30bcea2441c1120
+  zh: 9c146354ae8730da
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/the-mobile-adaptation-layer:
+  en: d0b2e636772fca46
+  zh: d8ff3d48451e46de
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/requirements:
+  en: dc8bb8a944b78ffc
+  zh: 58993b3d7a0256f0
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/install:
+  en: 57c44b0738c50a74
+  zh: 9c27551c134c78c7
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/use:
+  en: 95b33ce52c471165
+  zh: c9090e8856b38abb
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/remote-access-over-the-internet-tunnels:
+  en: ec505681a8d97520
+  zh: eaf4dbf3edf5cf82
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/remote-access-over-the-internet-tunnels/one-click-public-tunnel-recommended:
+  en: dbe13eb35ce68679
+  zh: 64eac83f727f7cad
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/remote-access-over-the-internet-tunnels/stable-hostname-relay-default-on-pair-once-across-restarts:
+  en: 24d069693d9dc512
+  zh: 05d42537e15453ba
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/remote-access-over-the-internet-tunnels/fixed-hostname-named-tunnel-bring-your-own-domain:
+  en: 8a7d06909ed4021b
+  zh: 29f392c65cf534b6
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/remote-access-over-the-internet-tunnels/fixed-hostname-named-tunnel-bring-your-own-domain/keeping-the-ingress-port-in-sync-optional-update-only:
+  en: f0f7bd5578126ca4
+  zh: 122f0ee6a8eab21c
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/remote-access-over-the-internet-tunnels/manual-tunnels-bring-your-own:
+  en: 9f5c200e309bcf10
+  zh: d933dfe69eb61e0a
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/development:
+  en: 34dee2489b08be1a
+  zh: 24e4bfdaa8efadfc
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/checks:
+  en: f64cbb03526becde
+  zh: 87828582573bd6ee
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/harness-contract-dependencies:
+  en: e337c888655abdb9
+  zh: 6fbcd3d65854f6f5
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/manual-e2e-lan-pairing-round-trip:
+  en: 11fb50454af330dc
+  zh: a22baa4cbac67b2c
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/security-model:
+  en: c96d3b1131691f9b
+  zh: 47bed3fa39891427
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/known-limitations-and-deferred-work:
+  en: 5114ceeb187b1136
+  zh: bc2199218a1bfeed
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/dependency-rationale:
+  en: 64227546c0ce21fc
+  zh: f2af53dd1ae0b6b6
+/dsh-remote-web-ui-mobile-cross-device-remote-web-control-for-deepseek-harness-dsh/telemetry:
+  en: 640b5899c04ea4e5
+  zh: 7b1929d0932fabcd

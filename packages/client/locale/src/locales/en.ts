@@ -35,7 +35,7 @@ export const en = {
   'subtitle.expand': 'Expand description for {name}',
   'subtitle.collapse': 'Collapse description for {name}',
   'back': 'Back',
-  'brand.localBuild': 'DSH Local Build',
+  'brand.localBuild': 'PINNACLE AI AGENT',
   'workspace.defaultName': 'Default workspace',
   'unknown': 'Unknown',
   'none': 'None',
@@ -45,4 +45,5 @@ export const en = {
   'markdown.truncatedCharacters': '… truncated at {total} characters',
   'number.thousand': '{value}K',
   'number.million': '{value}M',
+  'footer.by': 'By: Elhussieny Tohamy',
 } satisfies Record<CommonKey, string>
