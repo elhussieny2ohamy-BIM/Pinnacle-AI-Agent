@@ -10,7 +10,7 @@
 
 | المجلد / الملف | الغرض |
 |---|---|
-| `TBYAAN-MCP-HUB/` | مركز MCP (واجهة Modules + Doctor، لوحة تحكم MCP) |
+| `PINNACLE-MCP-HUB/` | مركز MCP (واجهة Modules + Doctor، لوحة تحكم MCP) |
 | `pack-aec/` | تعريفات وحدات AEC (Revit, Navisworks, AutoCAD, Civil 3D, Rhino, SketchUp) |
 | `setup.ps1` | سكريبت التثبيت الرئيسي (يضغط زر واحد ويُثبت كل شيء) |
 | `setup/runtime.ps1` | يتحقق وينصب التشغيلات: Node.js, .NET Runtime, uv/Python |
@@ -32,7 +32,7 @@ cd Pinnacle-AI-Agent
 .\setup.ps1
 
 # 3) بعد الانتهاء، شغل مركز MCP
-cd TBYAAN-MCP-HUB
+cd PINNACLE-MCP-HUB
 pnpm run build
 pnpm run test
 ```
