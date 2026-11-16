@@ -34,6 +34,7 @@ __pycache__/
 .cache/
 .desktop-build/
 artifacts/
+/release-assets/
 
 # --- Local settings, logs, OS junk ---
 .DS_Store
