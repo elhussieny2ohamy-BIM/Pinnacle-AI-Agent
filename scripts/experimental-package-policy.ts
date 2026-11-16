@@ -8,9 +8,13 @@
 export const EXPERIMENTAL_PACKAGE_NAME_EXCEPTIONS: Readonly<Record<string, string>> = {
   'packages/experimental/cua': '@deepseek-ai/dsh-cua',
   'packages/experimental/cua-bundle': '@deepseek-ai/dsh-cua-bundle',
+  'packages/experimental/cua-macos': '@deepseek-ai/dsh-cua-macos',
+  'packages/experimental/cua-mcp': '@deepseek-ai/dsh-cua-mcp',
+  'packages/experimental/cua-windows': '@deepseek-ai/dsh-cua-windows',
   'packages/experimental/tool-session-query': '@deepseek-ai/dsh-tool-session-query',
   'packages/experimental/session-title-all-prompts-llm': '@deepseek-ai/dsh-session-title-all-prompts-llm',
   'packages/experimental/tool-terminal': '@deepseek-ai/dsh-tool-terminal',
+  'packages/experimental/terminal-panel': '@deepseek-ai/dsh-terminal-panel',
   'packages/experimental/tool-ralph': '@deepseek-ai/dsh-tool-ralph',
   'packages/experimental/skill-badge': '@deepseek-ai/dsh-skill-badge',
   'packages/experimental/hook-protocol': '@deepseek-ai/dsh-hook-protocol',
@@ -25,12 +29,61 @@ export const EXPERIMENTAL_PACKAGE_NAME_EXCEPTIONS: Readonly<Record<string, strin
   'packages/experimental/plugin-recommendations': '@deepseek-ai/dsh-plugin-recommendations',
   'packages/experimental/client-ui-plugin-recommendations': '@deepseek-ai/dsh-client-ui-plugin-recommendations',
   'packages/experimental/personalized-recommendations': '@deepseek-ai/dsh-personalized-recommendations',
+  'packages/experimental/deepseek-chat-import': '@deepseek-ai/dsh-deepseek-chat-import',
+  'packages/experimental/timeline': '@deepseek-ai/dsh-timeline',
   'packages/experimental/dsh-agent-team-gui': '@deepseek-ai/dsh-agent-team-gui',
   'packages/experimental/dsh-remote-web-ui': '@deepseek-ai/dsh-remote-web-ui',
 } satisfies Record<`packages/experimental/${string}`, `@deepseek-ai/dsh-${string}`>
 
 /** npm namespace for experimental packages without retained-name exceptions. */
 export const EXPERIMENTAL_PACKAGE_NAME_PREFIX = '@deepseek-ai/dsh-experimental-'
+
+/**
+ * Directories whose experimental package predates the unprefixed naming rule and keeps that npm name.
+ * New experimental packages must declare an unprefixed name in EXPERIMENTAL_PACKAGE_NAME_EXCEPTIONS instead.
+ */
+export const LEGACY_PREFIXED_EXPERIMENTAL_PACKAGE_DIRECTORIES: readonly string[] = [
+  'packages/experimental/api-speech-to-text',
+  'packages/experimental/auto-review',
+  'packages/experimental/badge-skill-bundle',
+  'packages/experimental/browser-use-chrome-devtools-mcp',
+  'packages/experimental/browser-use-playwright-mcp',
+  'packages/experimental/browser-use-runtime',
+  'packages/experimental/browser-use-stagehand-native',
+  'packages/experimental/claude-code-mods',
+  'packages/experimental/client-ui-claude-code-mods',
+  'packages/experimental/client-ui-cot-translation',
+  'packages/experimental/client-ui-forge',
+  'packages/experimental/client-ui-stats',
+  'packages/experimental/client-ui-voice-input',
+  'packages/experimental/computer-use-cua-driver-mcp',
+  'packages/experimental/computer-use-cua-driver-native',
+  'packages/experimental/cot-translation-bundle',
+  'packages/experimental/forge',
+  'packages/experimental/forge-bundle',
+  'packages/experimental/forge-github',
+  'packages/experimental/forge-session',
+  'packages/experimental/inspector',
+  'packages/experimental/inspector-profile',
+  'packages/experimental/liveshare',
+  'packages/experimental/liveshare-protocol',
+  'packages/experimental/plugin-market-bundle',
+  'packages/experimental/ralph-bundle',
+  'packages/experimental/session-inspector',
+  'packages/experimental/session-search',
+  'packages/experimental/session-titles-bundle',
+  'packages/experimental/speech-to-text',
+  'packages/experimental/speech-to-text-sensevoice',
+  'packages/experimental/subagent-oar',
+  'packages/experimental/terminal-bundle',
+  'packages/experimental/tool-subagent-oar',
+  'packages/experimental/tool-worktree',
+  'packages/experimental/translator',
+  'packages/experimental/voice-input-bundle',
+  'packages/experimental/webworker-packer',
+  'packages/experimental/webworker-runtime',
+  'packages/experimental/worktree',
+]
 const retainedNames = new Set(Object.values(EXPERIMENTAL_PACKAGE_NAME_EXCEPTIONS))
 
 /**
