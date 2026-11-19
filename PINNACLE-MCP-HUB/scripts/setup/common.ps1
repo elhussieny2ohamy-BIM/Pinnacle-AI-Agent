@@ -25,7 +25,7 @@ function Assert-AecFile {
 
 function Complete-AecSetup {
     param([string] $Server, [string] $Target, [string] $Result)
-    Write-Host ("{0}: {1} â€” {2}" -f $Server, $Result, $Target)
+    Write-Host ("{0}: {1} - {2}" -f $Server, $Result, $Target)
 }
 
 function Invoke-AecPowerShellScript {
