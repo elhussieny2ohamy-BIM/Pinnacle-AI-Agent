@@ -100,30 +100,28 @@ $report['Navisworks'] = if ($navisOk) { 'ok' } else { 'missing (NavisWorksMaster
 # A Civil 3D bundle needs Contents\<year>\Civil3DMcpPlugin.dll. The source
 # project requires licensed Civil 3D references; only package it when a built
 # DLL exists, never an XML-only stub.
-$civilVariants = @(
-    (Join-Path $RepoRoot 'Civil3D-mcp-main\Civil3D-MCP-Plugin\bin\Release\net8.0-windows'),
-    (Join-Path $RepoRoot 'Civil3D-mcp-main\Civil3D-MCP-Plugin\bin\Release\net8.0'),
-    (Join-Path $ROAM 'Autodesk\ApplicationPlugins\MCPCivil3D.bundle')
+$civilBuilds = @(
+    @{ Path = (Join-Path $RepoRoot 'Civil3D-mcp-main\Civil3D-MCP-Plugin\bin\Release\net10.0-windows'); Years = @('2026', '2027') },
+    @{ Path = (Join-Path $RepoRoot 'Civil3D-mcp-main\Civil3D-MCP-Plugin\bin\Release\net8.0-windows');  Years = @('2025') },
+    @{ Path = (Join-Path $RepoRoot 'Civil3D-mcp-main\Civil3D-MCP-Plugin\bin\Release\net8.0');          Years = @('2025') }
 )
-$civilDll = $null
-foreach ($candidate in $civilVariants) {
-    if (Test-Path -LiteralPath $candidate -PathType Container) {
-        $dll = Get-ChildItem -LiteralPath $candidate -Recurse -File -Filter 'Civil3DMcpPlugin.dll' -ErrorAction SilentlyContinue | Select-Object -First 1
-        if ($dll) { $civilDll = $dll; break }
-    }
-}
-if ($civilDll) {
-    $civilTarget = Join-Path $Stage 'Civil3D\MCPCivil3D.bundle'
-    # The project targets Civil 3D 2026 references. A .NET 8 build can load in
-    # 2025-2027; 2023/2024 need a net48 build and are intentionally omitted.
-    foreach ($year in @('2025', '2026', '2027')) {
+$civilTarget = Join-Path $Stage 'Civil3D\MCPCivil3D.bundle'
+$civilYears = @()
+foreach ($build in $civilBuilds) {
+    if (-not (Test-Path -LiteralPath $build.Path -PathType Container)) { continue }
+    $dll = Get-ChildItem -LiteralPath $build.Path -File -Filter 'Civil3DMcpPlugin.dll' -ErrorAction SilentlyContinue | Select-Object -First 1
+    if (-not $dll) { continue }
+    foreach ($year in $build.Years) {
         $versionDir = Join-Path $civilTarget "Contents\$year"
         New-Item -ItemType Directory -Path $versionDir -Force | Out-Null
-        Copy-Item -LiteralPath $civilDll.FullName -Destination $versionDir -Force
+        Copy-Item -LiteralPath $dll.FullName -Destination $versionDir -Force
+        $civilYears += $year
     }
+}
+if ($civilYears.Count -gt 0) {
     $xml = Join-Path $RepoRoot 'Civil3D-mcp-main\Civil3D-MCP-Plugin\PackageContents.xml'
     if (Test-Path -LiteralPath $xml) { Copy-Item -LiteralPath $xml -Destination $civilTarget -Force }
-    $report['Civil3D'] = "ok ($($civilDll.Directory.Name))"
+    $report['Civil3D'] = "ok ($($civilYears -join ', '))"
 }
 else {
     $report['Civil3D'] = 'MISSING - build Civil3D-MCP-Plugin with Civil 3D references first'

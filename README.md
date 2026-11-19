@@ -173,10 +173,10 @@ AutoCAD and Rhino are installed from PyPI with `uv`; they have no server zip.
 ## Known gaps
 
 - **Civil 3D host plugin binary**: `Civil3D-MCP-Plugin` needs licensed Civil 3D
-  managed references to build. The node server and 34 tools work without it,
-  but Civil 3D entities require `Civil3DMcpPlugin.dll` under
-  `MCPCivil3D.bundle\Contents\<year>\`. Build it on a Civil 3D workstation and
-  add it to `pinnacle-host-addins.zip`.
+  managed references to build. This release ships a .NET 10 build for Civil 3D
+  2026/2027. Civil 3D 2025 needs a .NET 8 build against its own references.
+  Build it on a Civil 3D workstation and add it to
+  `pinnacle-host-addins.zip`.
 - **Navisworks bundle**: ships from `NavisWorksMaster-main\NavisHelper.bundle`.
 - **Rhino 7**: the plugin is built for Rhino 8. Rhino 7 users should install
   from the upstream release or rebuild the `.rhp`.
