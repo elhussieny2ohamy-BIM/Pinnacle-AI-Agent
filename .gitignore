@@ -59,3 +59,8 @@ desktop.ini
 # --- Local MCP scratch probes (kept on disk, not tracked) ---
 /test_*.py
 /find_packages.py
+
+# --- Local deck/screenshot artifacts ---
+/_annot_balance.png
+/footer_crop_view.png
+/pinnacle-ai-agent-deck.html
