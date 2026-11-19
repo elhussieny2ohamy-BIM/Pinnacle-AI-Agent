@@ -191,7 +191,7 @@ function Merge-JsonMcpServers {
     # Safety: only touch a known MCP config or a file that already has mcpServers.
     $hasMcpKey = ($null -ne $doc) -and ($doc.PSObject.Properties.Name -contains 'mcpServers')
     if (-not $hasMcpKey -and -not (Test-KnownMcpConfigPath -Path $Path)) {
-        Write-Host "    - تخطّي (ليس ملف إعداد MCP): $Path" -ForegroundColor Yellow
+        Write-Host "    - skipped (not an MCP config file): $Path" -ForegroundColor Yellow
         return
     }
 
@@ -234,7 +234,7 @@ function Merge-JsonMcpServers {
 
         $target = Get-ServerTarget -Entry $obj
         if ($target -and $existingTargets.ContainsKey($target)) {
-            Write-Host "    - موجود مسبقاً باسم '$($existingTargets[$target])' (نفس الملف): $name" -ForegroundColor DarkGray
+            Write-Host "    - already configured as '$($existingTargets[$target])' (same launcher): $name" -ForegroundColor DarkGray
             continue
         }
 
