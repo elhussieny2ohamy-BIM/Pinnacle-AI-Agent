@@ -435,11 +435,17 @@ function Install-DshMcpManagerConfig {
     Write-Host "    backup: $backup" -ForegroundColor DarkGray
 
     $existing = @{}
-    $list = @()
+    $targets  = @{}
+    $list     = @()
     foreach ($entry in @($doc.servers)) {
         if ($null -eq $entry) { continue }
+        $target = Get-ServerTarget -Entry $entry
+        # Drop duplicate launchers (e.g. revit-mcp and rvt-mcp pointing to the
+        # same rvt-mcp.exe) while preserving the first/user-facing name.
+        if ($target -and $targets.ContainsKey($target)) { continue }
         $list += $entry
         if ($entry.name) { $existing[[string]$entry.name] = $entry }
+        if ($target) { $targets[$target] = $entry }
     }
 
     $changed = 0
@@ -449,8 +455,20 @@ function Install-DshMcpManagerConfig {
         $envMap = @{}
         foreach ($key in $source.env.Keys) { $envMap[$key] = [string]$source.env[$key] }
 
+        $sourceTarget = Get-ServerTarget -Entry ([pscustomobject]@{
+            command = [string]$source.command
+            args    = @($argsList)
+        })
+
+        $entry = $null
         if ($existing.ContainsKey($name)) {
             $entry = $existing[$name]
+        }
+        elseif ($sourceTarget -and $targets.ContainsKey($sourceTarget)) {
+            $entry = $targets[$sourceTarget]
+        }
+
+        if ($null -ne $entry) {
             $before = "$($entry.command)|$($entry.enabled)|$($entry.args -join ' ')"
             $entry.enabled = $true
             $entry.transport = 'stdio'
@@ -482,6 +500,7 @@ function Install-DshMcpManagerConfig {
             }
             $list += $entry
             $existing[$name] = $entry
+            if ($sourceTarget) { $targets[$sourceTarget] = $entry }
             $changed++
         }
     }
