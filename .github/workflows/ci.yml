@@ -74,7 +74,7 @@ jobs:
       - name: Verify hub package
         working-directory: PINNACLE-MCP-HUB
         shell: pwsh
-        run: .\scripts\verify.ps1 -PackPath ..\pack-aec\index.js
+        run: .\scripts\verify.ps1 -PackPath ..\..\pack-aec\index.js
 
       - name: Package release artifacts
         working-directory: PINNACLE-MCP-HUB
