@@ -1,0 +1,41 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "rvt-mcp": {
+      "type": "local",
+      "command": ["C:\\Users\\<you>\\AppData\\Local\\Bimwright\\rvt-mcp\\server\\current\\rvt-mcp.exe"],
+      "enabled": true
+    },
+    "navis-mcp": {
+      "type": "local",
+      "command": ["C:\\Users\\<you>\\AppData\\Local\\NavisHelper\\McpServer\\NavisHelper.McpServer.exe"],
+      "enabled": true
+    },
+    "autocad-mcp": {
+      "type": "local",
+      "command": ["C:\\Users\\<you>\\.local\\bin\\autocad-mcp.exe", "--port", "8080"],
+      "enabled": true,
+      "environment": { "AUTOCAD_MCP_BACKEND": "auto" }
+    },
+    "civil3d-mcp": {
+      "type": "local",
+      "command": ["node", "C:\\Users\\<you>\\AppData\\Roaming\\MCP Civil 3D\\index.js", "--stdio"],
+      "enabled": true,
+      "environment": { "MCP_HTTP_PORT": "3001" }
+    },
+    "rhino-mcp": {
+      "type": "local",
+      "command": ["C:\\Users\\<you>\\.local\\bin\\rhino-mcp.exe", "--transport", "stdio"],
+      "enabled": true
+    },
+    "sketchup-mcp": {
+      "type": "local",
+      "command": ["node", "C:\\Users\\<you>\\AppData\\Local\\Programs\\SketchUp MCP\\server\\index.mjs"],
+      "enabled": true,
+      "environment": {
+        "SKETCHUP_MCP_PORT": "9876",
+        "SKETCHUP_MCP_TIMEOUT": "120"
+      }
+    }
+  }
+}

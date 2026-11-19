@@ -14,18 +14,25 @@ $null = New-Item -ItemType Directory -Force -Path $OutputDirectory
 
 & (Join-Path $PSScriptRoot 'verify.ps1') -PackPath (Join-Path $PackAecRoot 'index.js')
 
+# pnpm/npm write progress to stderr; with $ErrorActionPreference = 'Stop' the
+# PowerShell wrapper turns that into a terminating error even on exit code 0.
+function Invoke-Native {
+    param([scriptblock] $Command, [string] $FailureMessage)
+    $previous = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try { & $Command } finally { $ErrorActionPreference = $previous }
+    if ($LASTEXITCODE -ne 0) { throw $FailureMessage }
+}
+
 Push-Location $projectRoot
 try {
-    & pnpm run build
-    if ($LASTEXITCODE -ne 0) { throw 'Hub build failed.' }
-    & pnpm run pack
-    if ($LASTEXITCODE -ne 0) { throw 'Hub pack failed.' }
+    Invoke-Native { pnpm run build } 'Hub build failed.'
+    Invoke-Native { pnpm run pack } 'Hub pack failed.'
 } finally { Pop-Location }
 
 Push-Location $PackAecRoot
 try {
-    & npm pack --pack-destination $OutputDirectory
-    if ($LASTEXITCODE -ne 0) { throw 'AEC pack packaging failed.' }
+    Invoke-Native { npm pack --pack-destination $OutputDirectory } 'AEC pack packaging failed.'
 } finally { Pop-Location }
 
 $hubSource = Join-Path $OutputDirectory ("pinnacle-mcp-hub-{0}.tgz" -f $hubPackage.version)

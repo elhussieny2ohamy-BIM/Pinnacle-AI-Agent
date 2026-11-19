@@ -35,7 +35,7 @@ foreach ($file in $powerShellFiles) {
 $packagePath = Join-Path $projectRoot 'package.json'
 if (Test-Path -LiteralPath $packagePath) {
     $package = Get-Content -LiteralPath $packagePath -Raw | ConvertFrom-Json
-    if ($package.engines.dsh -ne '>=0.2.2-alpha.3 <0.2.2-rc.1') { $failures.Add('package.json engines.dsh no longer matches the tested DSH compatibility range.') }
+    if ($package.engines.dsh -ne '>=0.2.2-alpha.3 <0.2.3') { $failures.Add('package.json engines.dsh no longer matches the tested DSH compatibility range.') }
     if ($package.dsh.bundle.patch -ne './cordis.patch.yml') { $failures.Add('package.json no longer points to cordis.patch.yml.') }
     if ($package.peerDependencies.'@deepseek-ai/dsh-typert-protocol' -ne '^0.2.2-alpha.3') { $failures.Add('Typert protocol peer range changed; review INTEGRATION.md.') }
 }

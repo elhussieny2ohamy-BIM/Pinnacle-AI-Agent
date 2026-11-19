@@ -1,133 +1,157 @@
-#!/usr/bin/env pwsh
+﻿#!/usr/bin/env pwsh
 # =============================================================================
-# مرحلة التشغيلات (Runtimes) — يتحقق وينصب Node.js, .NET Runtime, uv/Python
+# Runtime stage - verify/install Node.js, .NET Desktop Runtime and uv (Python).
+# All output is ASCII so Windows PowerShell 5.1 never mangles the console.
 # =============================================================================
+
+$script:MinNodeMajor = 20
 
 function Test-Command {
     param([string] $Name)
     return (Get-Command $Name -CommandType Application -ErrorAction SilentlyContinue) -ne $null
 }
 
-function Test-Node {
-    return (Test-Command 'node') -and (node --version 2>$null -match '^v\d+\.\d+')
+function Get-NodeVersion {
+    if (-not (Test-Command 'node')) { return $null }
+    $raw = (node --version 2>$null)
+    if ($raw -match '^v(\d+)\.(\d+)\.(\d+)') { return [version]($Matches[1] + '.' + $Matches[2] + '.' + $Matches[3]) }
+    return $null
 }
 
+function Test-Node {
+    $v = Get-NodeVersion
+    return ($null -ne $v) -and ($v.Major -ge $script:MinNodeMajor)
+}
+
+# `dotnet --version` only works with an SDK. Runtimes are checked separately.
 function Test-DotNet {
-    return (Test-Command 'dotnet') -and (dotnet --version 2>$null -match '^\d+\.\d+')
+    if (-not (Test-Command 'dotnet')) { return $false }
+    $runtimes = (dotnet --list-runtimes 2>$null)
+    if (-not $runtimes) { return $false }
+    return [bool]($runtimes -match 'Microsoft\.(WindowsDesktop|NETCore)\.App\s+8\.')
 }
 
 function Test-Uv {
     return (Test-Command 'uv')
 }
 
-# ── تنصيب Node.js إن لم يوجد ──
+function Invoke-Installer {
+    param([string] $Path, [string] $Arguments)
+    $p = Start-Process -FilePath $Path -ArgumentList $Arguments -Wait -PassThru
+    # 0 = success, 3010 = reboot required, 1641 = reboot initiated
+    if ($p.ExitCode -notin @(0, 3010, 1641)) {
+        throw "Installer failed with exit code $($p.ExitCode): $Path"
+    }
+    if ($p.ExitCode -in @(3010, 1641)) {
+        Write-Host "    (a reboot is required to finish the installation)" -ForegroundColor Yellow
+    }
+}
+
+# -- Node.js ----------------------------------------------------------------
 function Install-Node {
     param([switch] $WhatIf)
 
     if (Test-Node) {
-        Write-Host "  ✓ Node.js موجود بالفعل: $(node --version)" -ForegroundColor Green
+        Write-Host "  [ok] Node.js $((Get-NodeVersion))" -ForegroundColor Green
         return
     }
 
-    Write-Host "  ✗ Node.js غير مثبت — جاري التنزيل من nodejs.org ..." -ForegroundColor Yellow
-    $nodeUrl = 'https://nodejs.org/dist/v20.11.1/node-v20.11.1-x64.msi'
-    $msiPath = Join-Path $env:TEMP 'node-installer.msi'
+    $nodeUrl = 'https://nodejs.org/dist/v20.18.1/node-v20.18.1-x64.msi'
+    $msiPath = Join-Path $env:TEMP 'pinnacle-node-installer.msi'
+    Write-Host "  Node.js $script:MinNodeMajor+ is required - downloading $nodeUrl ..." -ForegroundColor Yellow
 
     if ($WhatIf) {
-        Write-Host "  [WhatIf] سيُحمل Node.js من: $nodeUrl ويُثبت بصمت" -ForegroundColor Gray
+        Write-Host "  [WhatIf] would install Node.js from $nodeUrl" -ForegroundColor Gray
         return
     }
 
     try {
-        Invoke-WebRequest -Uri $nodeUrl -OutFile $msiPath -TimeoutSec 300
-        & msiexec.exe /i $msiPath /quiet /norestart
-        if ($LASTEXITCODE -ne 0) { throw "فشل تثبيت Node.js (كود $LASTEXITCODE)" }
-        Write-Host "  ✓ تم تثبيت Node.js بنجاح" -ForegroundColor Green
+        Invoke-WebRequest -Uri $nodeUrl -OutFile $msiPath -TimeoutSec 600
+        Invoke-Installer -Path 'msiexec.exe' -Arguments "/i `"$msiPath`" /quiet /norestart"
+        $env:PATH = [Environment]::GetEnvironmentVariable('PATH', 'Machine') + ';' +
+                    [Environment]::GetEnvironmentVariable('PATH', 'User')
+        if (-not (Test-Node)) { throw 'Node.js was installed but is not on PATH yet. Open a new terminal and re-run setup.' }
+        Write-Host "  [ok] Node.js installed" -ForegroundColor Green
     }
-    catch {
-        Write-Error "فشل تنزيل/تثبيت Node.js: $_"
-        throw
+    finally {
+        if (Test-Path -LiteralPath $msiPath) { Remove-Item -LiteralPath $msiPath -Force -ErrorAction SilentlyContinue }
     }
 }
 
-# ── تنصيب .NET Runtime إن لم يوجد ──
+# -- .NET Desktop Runtime 8 -------------------------------------------------
 function Install-DotNet {
     param([switch] $WhatIf)
 
     if (Test-DotNet) {
-        Write-Host "  ✓ .NET موجود بالفعل: $(dotnet --version)" -ForegroundColor Green
+        Write-Host "  [ok] .NET Desktop Runtime 8" -ForegroundColor Green
         return
     }
 
-    Write-Host "  ✗ .NET Runtime غير مثبت — جاري التنزيل ..." -ForegroundColor Yellow
-    $dotnetUrl = 'https://download.visualstudio.microsoft.com/download/pr/8c2e0f1c-8f2d-4e5a-9b3c-7d1e6f5a4b3c/dotnet-runtime-8.0.0-win-x64.exe'
+    # aka.ms always resolves to the current 8.0 servicing release.
+    $dotnetUrl = 'https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x64.exe'
+    $exePath = Join-Path $env:TEMP 'pinnacle-dotnet-runtime.exe'
+    Write-Host "  .NET Desktop Runtime 8 is required - downloading ..." -ForegroundColor Yellow
 
     if ($WhatIf) {
-        Write-Host "  [WhatIf] سيُحمل .NET Runtime من: $dotnetUrl ويُثبت بصمت" -ForegroundColor Gray
+        Write-Host "  [WhatIf] would install .NET Desktop Runtime 8 from $dotnetUrl" -ForegroundColor Gray
         return
     }
 
     try {
-        $exePath = Join-Path $env:TEMP 'dotnet-installer.exe'
-        Invoke-WebRequest -Uri $dotnetUrl -OutFile $exePath -TimeoutSec 600
-        & $exePath /quiet /norestart
-        if ($LASTEXITCODE -ne 0) { throw "فشل تثبيت .NET Runtime (كود $LASTEXITCODE)" }
-        Write-Host "  ✓ تم تثبيت .NET Runtime بنجاح" -ForegroundColor Green
+        Invoke-WebRequest -Uri $dotnetUrl -OutFile $exePath -TimeoutSec 600 -MaximumRedirection 5
+        Invoke-Installer -Path $exePath -Arguments '/install /quiet /norestart'
+        Write-Host "  [ok] .NET Desktop Runtime installed" -ForegroundColor Green
     }
-    catch {
-        Write-Error "فشل تنزيل/تثبيت .NET Runtime: $_"
-        throw
+    finally {
+        if (Test-Path -LiteralPath $exePath) { Remove-Item -LiteralPath $exePath -Force -ErrorAction SilentlyContinue }
     }
 }
 
-# ── تنصيب uv (Python tool manager) إن لم يوجد ──
+# -- uv (Python tool manager) ----------------------------------------------
 function Install-Uv {
     param([switch] $WhatIf)
 
     if (Test-Uv) {
-        Write-Host "  ✓ uv موجود بالفعل: $(uv --version 2>$null)" -ForegroundColor Green
+        Write-Host "  [ok] $((uv --version 2>$null))" -ForegroundColor Green
         return
     }
 
-    Write-Host "  ✗ uv غير مثبت — جاري التنزيل من astral.sh ..." -ForegroundColor Yellow
+    Write-Host "  uv is required for AutoCAD and Rhino MCP - installing ..." -ForegroundColor Yellow
 
     if ($WhatIf) {
-        Write-Host "  [WhatIf] سيُحمل uv وتُثبت أداوت Python (autocad-mcp, rhino3dm-mcp)" -ForegroundColor Gray
+        Write-Host "  [WhatIf] would install uv from https://astral.sh/uv/install.ps1" -ForegroundColor Gray
         return
     }
 
+    $installScript = Join-Path $env:TEMP 'pinnacle-uv-install.ps1'
     try {
-        # offizielle установка uv عبر PowerShell
-        $installScript = 'https://astral.sh/uv/install.ps1'
-        Invoke-WebRequest -Uri $installScript -OutFile (Join-Path $env:TEMP 'uv-install.ps1') -TimeoutSec 120
-        & (Join-Path $env:TEMP 'uv-install.ps1')
-        if ($LASTEXITCODE -ne 0) { throw "فشل تثبيت uv (كود $LASTEXITCODE)" }
+        Invoke-WebRequest -Uri 'https://astral.sh/uv/install.ps1' -OutFile $installScript -TimeoutSec 180
+        & $installScript
+        if ($LASTEXITCODE -ne 0) { throw "uv installer exited with code $LASTEXITCODE" }
 
-        # إعادة تحميل PATH ليشمل uv
-        $env:PATH = [Environment]::GetEnvironmentVariable('PATH', [EnvironmentVariableTarget]::User) + ';' +
-                    [Environment]::GetEnvironmentVariable('PATH', [EnvironmentVariableTarget]::Machine)
+        $env:PATH = [Environment]::GetEnvironmentVariable('PATH', 'Machine') + ';' +
+                    [Environment]::GetEnvironmentVariable('PATH', 'User') + ';' +
+                    (Join-Path $env:USERPROFILE '.local\bin')
 
-        if (-not (Test-Uv)) { throw 'uv لم يتم إضافته إلى PATH بعد التثبيت' }
-        Write-Host "  ✓ تم تثبيت uv بنجاح" -ForegroundColor Green
+        if (-not (Test-Uv)) { throw 'uv was installed but is not on PATH yet. Open a new terminal and re-run setup.' }
+        Write-Host "  [ok] uv installed" -ForegroundColor Green
     }
-    catch {
-        Write-Error "فشل تثبيت uv: $_"
-        throw
+    finally {
+        if (Test-Path -LiteralPath $installScript) { Remove-Item -LiteralPath $installScript -Force -ErrorAction SilentlyContinue }
     }
 }
 
-# ── الدالة الرئيسية للمرحلة ──
 function Install-Runtimes {
     param([switch] $WhatIf)
 
     Write-Host "  [1/3] Node.js ..." -ForegroundColor DarkCyan
     Install-Node -WhatIf:$WhatIf
 
-    Write-Host "  [2/3] .NET Runtime ..." -ForegroundColor DarkCyan
+    Write-Host "  [2/3] .NET Desktop Runtime ..." -ForegroundColor DarkCyan
     Install-DotNet -WhatIf:$WhatIf
 
-    Write-Host "  [3/3] uv (Python tool manager) ..." -ForegroundColor DarkCyan
+    Write-Host "  [3/3] uv ..." -ForegroundColor DarkCyan
     Install-Uv -WhatIf:$WhatIf
 
-    Write-Host "  ✓ جميع التشغيلات جاهزة" -ForegroundColor Green
+    Write-Host "  [ok] runtimes ready" -ForegroundColor Green
 }

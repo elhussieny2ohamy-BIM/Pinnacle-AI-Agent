@@ -1,4 +1,4 @@
-#!/usr/bin/env pwsh
+﻿#!/usr/bin/env pwsh
 # =============================================================================
 # PINNACLE AI AGENT — MCP Servers Comprehensive Setup
 # =============================================================================
@@ -17,13 +17,19 @@
 #   .\setup.ps1 -SkipServers       # يتخطى تنزيل السيرفرات (إذا كانت موجودة بالفعل)
 #   .\setup.ps1 -SkipPlugins       # يتخطى حقن الإضافات
 # =============================================================================
-[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
+[CmdletBinding()]
 param(
     [switch] $WhatIf,
     [switch] $SkipRuntimes,
     [switch] $SkipServers,
     [switch] $SkipPlugins,
+    [switch] $SkipClients,
     [switch] $SkipVerify,
+    [switch] $ForceClientConfig,             # يحدّث إعدادات MCP الموجودة بدل الحفاظ عليها
+    [string] $InstallDir = '',               # مجلد التثبيت (من الـ EXE) — افتراضي: مجلد السكربت
+    [string] $BundledAssetsDir = '',         # مجلد release-assets المضمّن (للتثبيت دون إنترنت)
+    [string] $AddinsDir = '',                # مجلد الإضافات المحلي (addins) — افتراضي: البحث التلقائي
+    [string] $LogPath = '',                  # مسار سجل التشغيل (يُستخدم في وضع التثبيت الصامت)
     [string] $ReleaseTag = 'latest',          # التاج اللي يتم التنزيل منه على GitHub Releases
     [string] $GitHubRepo = 'elhussieny2ohamy-BIM/Pinnacle-AI-Agent'
 )
@@ -31,9 +37,41 @@ param(
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
-$PSScriptRoot = Get-Item -Path $PSScriptRoot
-$RepoRoot     = $PSScriptRoot.Parent
-$SetupDir     = $PSScriptRoot
+# Make Arabic console output readable when the host supports UTF-8.
+try {
+    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+    $OutputEncoding = [System.Text.Encoding]::UTF8
+}
+catch { }
+
+$ScriptDir = Get-Item -Path $PSScriptRoot
+# When invoked from the repo/app root, stage files live in .\setup; when invoked
+# from inside .\setup they sit beside this script.
+$SetupDir  = if (Test-Path -LiteralPath (Join-Path $ScriptDir.FullName 'runtime.ps1') -PathType Leaf) {
+    $ScriptDir.FullName
+}
+else {
+    Join-Path $ScriptDir.FullName 'setup'
+}
+$RepoRoot  = if ($InstallDir) { (Resolve-Path -LiteralPath $InstallDir).Path } else { $ScriptDir.FullName }
+
+# Prefer the bundled offline assets when the repo/installer ships them.
+if (-not $BundledAssetsDir) {
+    $defaultAssets = Join-Path $RepoRoot 'release-assets'
+    if (Test-Path -LiteralPath $defaultAssets -PathType Container) { $BundledAssetsDir = $defaultAssets }
+}
+
+# Optional transcript so the silent EXE install leaves a readable log.
+$script:TranscriptStarted = $false
+if ($LogPath) {
+    try {
+        Start-Transcript -Path $LogPath -Append -Force | Out-Null
+        $script:TranscriptStarted = $true
+    }
+    catch {
+        Write-Warning "Could not start transcript at $LogPath : $($_.Exception.Message)"
+    }
+}
 
 # ── مسارات الثوابت (per-user، لا مسار صلب للقرص) ──
 $LOCAL = $env:LOCALAPPDATA
@@ -45,6 +83,7 @@ $stages = [ordered]@{
     runtime  = @{ label = 'التحقق من التشغيلات (Node, .NET, uv)'; enabled = -not $SkipRuntimes }
     servers  = @{ label = 'تنزيل وتثبيت خوادم MCP';            enabled = -not $SkipServers  }
     plugins  = @{ label = 'حقن الإضافات داخل البرامج';        enabled = -not $SkipPlugins  }
+    clients  = @{ label = 'تكوين عملاء MCP (Claude / ChatGPT / PINNACLE)'; enabled = -not $SkipClients }
     verify   = @{ label = 'فحص تشغيل الخوادم (smoke test)';   enabled = -not $SkipVerify   }
 }
 
@@ -54,7 +93,7 @@ Write-Host "==================================================================" 
 Write-Host " المجلد الجذر: $RepoRoot"
 Write-Host " الطور:        $ReleaseTag"
 Write-Host " المستودع:    $GitHubRepo"
-if ($WhatIfPreference.IsPresent -or $WhatIf) { Write-Host " ★ وضع تجربة فقط (-WhatIf) — لن يتم تعديل أي ملف" -ForegroundColor Yellow }
+if ($WhatIf) { Write-Host " ★ وضع تجربة فقط (-WhatIf) — لن يتم تعديل أي ملف" -ForegroundColor Yellow }
 Write-Host ""
 
 # ── دالة مساعدة لتشغيل مرحلة ──
@@ -65,45 +104,48 @@ function Invoke-Stage {
         return
     }
     Write-Host "`n▶ $Label ..." -ForegroundColor Cyan
-    if ($PSCmdlet.ShouldProcess($Label, 'تنفيذ مرحلة التثبيت')) {
-        & $Script
-        if ($LASTEXITCODE -ne 0) {
-            Write-Error "فشل تنفيذ مرحلة: $Label (كود الخروج $LASTEXITCODE)"
-        }
-    }
+    & $Script
 }
 
-# ── تحميل ملفات المراحل الفرعية ──
-function Dot-Source {
+# ── تحميل ملفات المراحل الفرعية (في نطاق السكربت نفسه) ──
+function Get-StagePath {
     param([string] $File)
     $path = Join-Path $SetupDir $File
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
         throw "ملف المرحلة غير موجود: $path"
     }
-    . $path
+    return $path
 }
 
-# ── 실행 المراحل بالترتيب ──
+# ── تنفيذ المراحل بالترتيب ──
 try {
-    Dot-Source 'runtime.ps1'
+    . (Get-StagePath 'runtime.ps1')
     Invoke-Stage -Name 'runtime'  -Label $stages.runtime.label  -Script { Install-Runtimes -WhatIf:$WhatIf }
 }
 catch { Write-Error $_; exit 1 }
 
 try {
-    Dot-Source 'servers.ps1'
-    Invoke-Stage -Name 'servers'  -Label $stages.servers.label  -Script { Install-Servers -RepoRoot $RepoRoot -Tag $ReleaseTag -GitHubRepo $GitHubRepo -WhatIf:$WhatIf }
+    . (Get-StagePath 'servers.ps1')
+    Invoke-Stage -Name 'servers'  -Label $stages.servers.label  -Script { Install-Servers -RepoRoot $RepoRoot -Tag $ReleaseTag -GitHubRepo $GitHubRepo -BundledAssetsDir $BundledAssetsDir -WhatIf:$WhatIf }
 }
 catch { Write-Error $_; exit 1 }
 
 try {
-    Dot-Source 'plugins.ps1'
-    Invoke-Stage -Name 'plugins'  -Label $stages.plugins.label  -Script { Install-Plugins -RepoRoot $RepoRoot -WhatIf:$WhatIf }
+    . (Get-StagePath 'plugins.ps1')
+    Invoke-Stage -Name 'plugins'  -Label $stages.plugins.label  -Script {
+        Install-Plugins -RepoRoot $RepoRoot -AddinsDir $AddinsDir -BundledAssetsDir $BundledAssetsDir -Tag $ReleaseTag -GitHubRepo $GitHubRepo -WhatIf:$WhatIf
+    }
 }
 catch { Write-Error $_; exit 1 }
 
 try {
-    Dot-Source 'verify.ps1'
+    . (Get-StagePath 'clients.ps1')
+    Invoke-Stage -Name 'clients'  -Label $stages.clients.label  -Script { Install-Clients -RepoRoot $RepoRoot -ForceClientConfig:$ForceClientConfig -WhatIf:$WhatIf }
+}
+catch { Write-Error $_; exit 1 }
+
+try {
+    . (Get-StagePath 'verify.ps1')
     Invoke-Stage -Name 'verify'   -Label $stages.verify.label   -Script { Verify-Servers -WhatIf:$WhatIf }
 }
 catch { Write-Error $_; exit 1 }
@@ -113,3 +155,6 @@ Write-Host "  اكتمل التثبيت بنجاح — كل خوادم MCP جا�
 Write-Host "==================================================================" -ForegroundColor Green
 Write-Host " إذا ظهرت أي أخطاء أعلاه، راجع سجل التشغيل وأعد تشغيل السكربت."
 Write-Host ""
+if ($script:TranscriptStarted) {
+    try { Stop-Transcript | Out-Null } catch { }
+}

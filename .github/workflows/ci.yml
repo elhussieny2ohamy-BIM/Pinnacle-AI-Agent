@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [my-custom-features, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  setup-scripts:
+    name: PowerShell syntax
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse setup scripts
+        shell: pwsh
+        run: |
+          $files = @(
+            'setup.ps1',
+            'setup/runtime.ps1',
+            'setup/servers.ps1',
+            'setup/plugins.ps1',
+            'setup/clients.ps1',
+            'setup/verify.ps1',
+            'setup/package-addins.ps1',
+            'setup/package-servers.ps1',
+            'installer/build-installer.ps1'
+          )
+          $failed = $false
+          foreach ($file in $files) {
+            $tokens = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile(
+              (Join-Path $PWD $file), [ref]$tokens, [ref]$errors) | Out-Null
+            if ($errors.Count -gt 0) {
+              $failed = $true
+              foreach ($error in $errors) {
+                Write-Error "$file:$($error.Extent.StartLineNumber): $($error.Message)"
+              }
+            }
+          }
+          if ($failed) { exit 1 }
+
+      - name: Check AEC pack
+        shell: pwsh
+        run: node --check pack-aec/index.js
+
+  hub:
+    name: Hub build
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.7.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        working-directory: PINNACLE-MCP-HUB
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        working-directory: PINNACLE-MCP-HUB
+        run: pnpm run build
+
+      - name: Verify hub package
+        working-directory: PINNACLE-MCP-HUB
+        shell: pwsh
+        run: .\scripts\verify.ps1 -PackPath ..\pack-aec\index.js
+
+      - name: Package release artifacts
+        working-directory: PINNACLE-MCP-HUB
+        shell: pwsh
+        run: .\scripts\package-release.ps1
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hub-release
+          path: |
+            PINNACLE-MCP-HUB/dist/*.tgz
+            PINNACLE-MCP-HUB/dist/latest.json
+            PINNACLE-MCP-HUB/dist/*.sha256
+          if-no-files-found: error

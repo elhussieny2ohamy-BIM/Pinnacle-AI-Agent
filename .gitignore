@@ -36,6 +36,12 @@ __pycache__/
 artifacts/
 /release-assets/
 
+# --- Local release builds ---
+/installer/output/
+/PINNACLE-MCP-HUB/dist/
+/PINNACLE-MCP-HUB/sandbox/client-build/lib/
+*.bak_pinnacle_*
+
 # --- Local settings, logs, OS junk ---
 .DS_Store
 Thumbs.db

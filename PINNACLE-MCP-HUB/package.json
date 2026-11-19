@@ -80,6 +80,6 @@
     "tsdown": "^0.22.2",
     "typescript": "^5.9.3"
   },
-  "license": "UNLICENSED"
+  "license": "MIT"
 }
 

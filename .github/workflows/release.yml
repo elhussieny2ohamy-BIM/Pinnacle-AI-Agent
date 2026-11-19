@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  hub-release:
+    name: Build hub release assets
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.7.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        working-directory: PINNACLE-MCP-HUB
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and stage
+        working-directory: PINNACLE-MCP-HUB
+        shell: pwsh
+        run: .\scripts\package-release.ps1
+
+      - name: Create or update GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            PINNACLE-MCP-HUB/dist/mcp-hub-*.tgz
+            PINNACLE-MCP-HUB/dist/pack-aec-*.tgz
+            PINNACLE-MCP-HUB/dist/latest.json
+            PINNACLE-MCP-HUB/dist/*.sha256
+          fail_on_unmatched_files: true
+          generate_release_notes: true
